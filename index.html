@@ -4497,15 +4497,12 @@ function submitQuestionnaire(cid, type) {
   if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
   if (errEl) errEl.style.display = 'none';
 
-  console.log('Submitting to Formspree:', JSON.stringify(formData));
-
   fetch('https://formspree.io/f/mykvzrkr', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(formData)
   })
   .then(res => {
-    console.log('Formspree response:', res.status, res.ok);
     if (res.ok) {
       saved.__submitted = true;
       localStorage.setItem(key, JSON.stringify(saved));
@@ -4521,7 +4518,6 @@ function submitQuestionnaire(cid, type) {
     }
   })
   .catch(err => {
-    console.error('Formspree error:', err);
     if (btn) { btn.disabled = false; btn.textContent = 'Send to Kelsie →'; }
     if (errEl) errEl.style.display = 'block';
   });
