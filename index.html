@@ -1197,7 +1197,8 @@ function handleCoverUpload(e){
 function generateLink(c){
   const payload={id:c.id,name:c.name,address:c.address,type:c.type,dates:c.dates||[],closing:c.closing||'',agentPhone:c.agentPhone||'',agentEmail:c.agentEmail||'',tcBuyer:c.tcBuyer||'Hannah',tcSeller:c.tcSeller||'Kim',agentMsg:c.agentMsg||''};
   const enc=btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  return window.location.href.split('?')[0]+'?data='+enc;
+  const base = 'https://kelsieutah-ui.github.io/threshold-portal/';
+  return base + '?data=' + enc;
 }
 function copyLinkFor(id){
   const c=getClient(id);if(!c)return;
@@ -6125,7 +6126,8 @@ window.generateLink = function(c) {
     listPrice: c.listPrice || ''
   };
   const enc = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  return window.location.href.split('?')[0] + '?data=' + enc;
+  const base = 'https://kelsieutah-ui.github.io/threshold-portal/';
+  return base + '?data=' + enc;
 };
 
 /* ══════════════════════════════════════════════
