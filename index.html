@@ -533,6 +533,10 @@ body.editing .add-cl-item-btn{display:block}
       <div class="cp-addr" id="cp-addr"></div>
     </div>
   </div>
+  <div class="hs-bar" id="hs-bar">
+    <span>Save this page to your home screen for easy access — tap Share then Add to Home Screen on iPhone, or tap the three-dot menu on Android.</span>
+    <button class="hs-dismiss" onclick="document.getElementById('hs-bar').style.display='none'">&#x2715;</button>
+  </div>
   <div class="cp-sticky" id="cp-sticky">
     <div class="cp-search-bar">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -7525,9 +7529,14 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
 .cp-h1 { font-family: 'Playfair Display', serif; font-size: 52px; color: var(--warm); font-weight: 600; margin: 0 0 8px; line-height: 1.1; letter-spacing: .01em; }
 .cp-addr { font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.5); font-weight: 400; margin: 0; }
 
+/* ── HOME SCREEN BAR ── */
+.hs-bar { width: 100%; background: var(--dark); padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-family: 'Jost', sans-serif; font-size: 12px; color: var(--mist); line-height: 1.5; }
+.hs-dismiss { background: none; border: none; color: var(--mist); font-size: 16px; cursor: pointer; padding: 0; flex-shrink: 0; opacity: .6; line-height: 1; transition: opacity .15s; }
+.hs-dismiss:hover { opacity: 1; }
+
 /* ── STICKY NAV ── */
-#cp-sticky { position: sticky; top: 0; z-index: 90; background: var(--cream); border-top: none; border-bottom: 1px solid var(--border); }
-.cp-jump-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 20px; max-width: 900px; margin: 0 auto; }
+#cp-sticky { position: sticky; top: 0; z-index: 100; background: var(--cream); border-top: none; border-bottom: 1px solid var(--border); margin-top: 0; }
+.cp-jump-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 20px; max-width: 900px; margin: 0 auto; background: none !important; border-radius: 0 !important; box-shadow: none !important; }
 .cp-jmp { padding: 8px 18px; border-radius: 30px; border: 1.5px solid var(--border); background: var(--white); font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--soft); cursor: pointer; transition: all .2s; }
 .cp-jmp.act { background: var(--dark); color: var(--warm); border-color: var(--dark); }
 .cp-jmp:hover { border-color: var(--sage); color: var(--dark); }
@@ -7924,7 +7933,7 @@ window.showClientPortal = function(cd) {
   const isBuyer = cd.type === 'buyer';
   document.getElementById('cp-type-label').textContent = (isBuyer?'Buyer':'Seller') + ' Portal · The Perry Group';
   document.getElementById('cp-name').textContent = 'Welcome, ' + (cd.name||'').split(' ')[0];
-  document.getElementById('cp-addr').textContent = (cd.address || '').split(',').map(p => p.trim()).filter(Boolean).join(' · ');
+  document.getElementById('cp-addr').innerHTML = (cd.address || '').split(',').map(p => p.trim().replace(/&/g,'&amp;')).filter(Boolean).join(' &middot; ');
 
   const tabs = isBuyer
     ? ['Welcome','Questionnaire','Checklists','Guides','Key Dates','Contact']
