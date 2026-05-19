@@ -4378,8 +4378,8 @@ function buildQuestionnaire(cd, type) {
   if (submitted) {
     return `<div class="q-submitted">
       <div style="font-size:36px;margin-bottom:12px">🎉</div>
-      <div>Questionnaire submitted!</div>
-      <p>Kelsie has everything she needs. She'll be in touch soon.</p>
+      <div>Thanks!</div>
+      <p>Kelsie received your answers and will be in touch soon.</p>
       <button class="btn btn-ghost btn-sm" style="margin-top:16px" onclick="resetQuestionnaire('${cid}','${type}')">Edit responses</button>
     </div>`;
   }
@@ -4401,7 +4401,8 @@ function buildQuestionnaire(cd, type) {
       </div>
     </div>`).join('')}
   <div class="q-submit-wrap">
-    <button class="q-submit-btn" onclick="submitQuestionnaire('${cid}','${type}')">Submit Questionnaire →</button>
+    <button class="q-submit-btn" onclick="submitQuestionnaire('${cid}','${type}')">Send to Kelsie →</button>
+    <div id="q-submit-error" style="display:none;color:#c0392b;font-size:13px;margin-top:10px">Something went wrong — please text Kelsie directly.</div>
     <div style="font-size:12px;color:var(--muted);margin-top:10px">Your answers save automatically as you type.</div>
   </div>`;
 }
@@ -4473,18 +4474,53 @@ function updateQProgress(cid, type) {
 function submitQuestionnaire(cid, type) {
   const key = Q_STORAGE(cid, type);
   const saved = JSON.parse(localStorage.getItem(key) || '{}');
-  saved.__submitted = true;
-  localStorage.setItem(key, JSON.stringify(saved));
-  // Re-render the questionnaire panel
-  const panels = document.querySelectorAll('.cpanel, [id^="agp-"], [id^="mpt-"]');
-  // Find the questionnaire panel and re-render
-  showToast('Questionnaire submitted — Kelsie has been notified');
-  // Trigger a tab re-render by finding the questionnaire tab
-  const nav = document.getElementById('cp-nav') || document.getElementById('ag-portal-nav');
-  if (nav) {
-    const qTab = Array.from(nav.querySelectorAll('button')).find(b => b.textContent.includes('Questionnaire'));
-    if (qTab) qTab.click();
-  }
+  const sections = type === 'buyer' ? BUYER_Q_SECTIONS : SELLER_Q_SECTIONS;
+  const cd = window._cd || {};
+
+  // Build submission payload using human-readable field labels as keys
+  const formData = {
+    _subject: 'New Questionnaire — ' + (cd.name || cid),
+    client_name: cd.name || cid,
+    client_address: cd.address || '',
+    portal_type: type
+  };
+  sections.forEach(sec => {
+    sec.fields.forEach(f => {
+      if (saved[f.id] !== undefined && String(saved[f.id]).trim() !== '') {
+        formData[f.label] = saved[f.id];
+      }
+    });
+  });
+
+  const btn = document.querySelector('.q-submit-btn');
+  const errEl = document.getElementById('q-submit-error');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  if (errEl) errEl.style.display = 'none';
+
+  fetch('https://formspree.io/f/mykvzrkr', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(formData)
+  })
+  .then(res => {
+    if (res.ok) {
+      saved.__submitted = true;
+      localStorage.setItem(key, JSON.stringify(saved));
+      showToast('Questionnaire sent to Kelsie!');
+      const nav = document.getElementById('cp-nav') || document.getElementById('ag-portal-nav');
+      if (nav) {
+        const qTab = Array.from(nav.querySelectorAll('button')).find(b => b.textContent.includes('Questionnaire'));
+        if (qTab) qTab.click();
+      }
+    } else {
+      if (btn) { btn.disabled = false; btn.textContent = 'Send to Kelsie →'; }
+      if (errEl) errEl.style.display = 'block';
+    }
+  })
+  .catch(() => {
+    if (btn) { btn.disabled = false; btn.textContent = 'Send to Kelsie →'; }
+    if (errEl) errEl.style.display = 'block';
+  });
 }
 
 function resetQuestionnaire(cid, type) {
