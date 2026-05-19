@@ -7586,6 +7586,57 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
 .portal-card-desc { font-size: 13px; color: var(--soft); line-height: 1.5; flex: 1; }
 .portal-card-btn { margin-top: 14px; align-self: flex-start; background: none; border: 1.5px solid var(--sage); border-radius: 20px; padding: 6px 16px; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--sage); cursor: pointer; transition: all .18s; }
 .portal-card-btn:hover { background: var(--sage); color: #fff; }
+
+/* ── TRANSACTION ROADMAP ── */
+.rm-wrap { padding: 0; }
+.rm-progress-block { margin-bottom: 24px; }
+.rm-progress-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.rm-progress-label { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--dark); }
+.rm-progress-count { font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--soft); font-weight: 700; }
+.rm-progress-track { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.rm-progress-fill { height: 100%; background: var(--sage); border-radius: 3px; transition: width .4s ease; width: 0%; }
+.rm-cal-wrap { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px 16px 14px; margin-bottom: 24px; }
+.rm-cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.rm-cal-title { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--dark); font-weight: 400; }
+.rm-cal-nav { background: none; border: none; font-size: 22px; color: var(--soft); cursor: pointer; padding: 0 6px; line-height: 1; transition: color .18s; }
+.rm-cal-nav:hover { color: var(--dark); }
+.rm-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+.rm-cal-day-label { font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--soft); text-align: center; padding: 2px 0 8px; }
+.rm-cal-cell { display: flex; flex-direction: column; align-items: center; padding: 1px 0 4px; }
+.rm-cal-cell span { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-family: 'Jost', sans-serif; font-size: 12px; color: var(--dark); }
+.rm-cal-cell.rm-has-date span { background: var(--sage); color: #fff; font-weight: 700; }
+.rm-cal-cell.rm-today span { border: 1.5px solid var(--sage); color: var(--sage); font-weight: 700; }
+.rm-cal-cell.rm-other span { color: rgba(0,0,0,.18); }
+.rm-date-label { font-family: 'Jost', sans-serif; font-size: 8px; letter-spacing: .4px; text-transform: uppercase; color: var(--sage); text-align: center; line-height: 1.3; max-width: 38px; margin-top: 1px; }
+.rm-steps { display: flex; flex-direction: column; gap: 8px; }
+.rm-step { display: flex; align-items: flex-start; gap: 14px; background: #fff; border: 1px solid var(--border); border-left: 3px solid transparent; border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 5px rgba(43,61,48,.05); transition: border-left-color .25s, background .25s, box-shadow .25s; }
+.rm-step.done { border-left-color: var(--sage); background: var(--cream); box-shadow: none; }
+.rm-step-body { flex: 1; min-width: 0; }
+.rm-step-num { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--soft); font-weight: 700; margin-bottom: 2px; }
+.rm-step-title { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--dark); font-weight: 400; margin-bottom: 3px; transition: color .25s; }
+.rm-step.done .rm-step-title { color: var(--soft); }
+.rm-step-desc { font-family: 'Jost', sans-serif; font-size: 12.5px; color: var(--soft); line-height: 1.55; transition: color .25s; }
+.rm-step.done .rm-step-desc { opacity: .55; }
+.rm-step-btn { display: inline-block; margin-top: 9px; background: none; border: 1.5px solid var(--sage); border-radius: 20px; padding: 5px 14px; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--sage); cursor: pointer; text-decoration: none; transition: all .18s; }
+.rm-step-btn:hover { background: var(--sage); color: #fff; }
+.rm-step-btn.rm-disabled { border-color: var(--border); color: var(--soft); cursor: default; opacity: .55; pointer-events: none; }
+.rm-check { flex-shrink: 0; margin-top: 1px; }
+.rm-check-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); background: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all .2s; padding: 0; }
+.rm-check-btn:hover { border-color: var(--sage); }
+.rm-check-btn.checked { background: var(--sage); border-color: var(--sage); }
+.rm-check-btn svg { opacity: 0; transition: opacity .2s; }
+.rm-check-btn.checked svg { opacity: 1; }
+.rm-phase-divider { display: flex; align-items: center; gap: 12px; padding: 8px 0 4px; }
+.rm-phase-line { flex: 1; height: 1px; background: var(--sage); opacity: .3; }
+.rm-phase-label { font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sage); white-space: nowrap; }
+.rm-lender-card { margin-top: 10px; background: var(--cream); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+.rm-lender-name { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--dark); margin-bottom: 1px; }
+.rm-lender-co { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--soft); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .8px; }
+.rm-lender-links { display: flex; flex-direction: column; gap: 3px; }
+.rm-lender-links a { font-family: 'Jost', sans-serif; font-size: 12px; color: var(--sage); text-decoration: none; }
+.rm-lender-links a:hover { text-decoration: underline; }
+.rm-lender-note { font-style: italic; font-size: 11px; color: var(--soft); margin-top: 8px; line-height: 1.5; opacity: .8; }
+.rm-warning { margin-top: 9px; font-family: 'Jost', sans-serif; font-size: 11.5px; color: #7a5a00; line-height: 1.5; background: #fff8e6; border-left: 3px solid #e6a817; border-radius: 0 6px 6px 0; padding: 8px 12px; }
 </style>
 
 <script>
@@ -8074,32 +8125,269 @@ window.switchPortalTab = function(sectionId, btn) {
   if (bw) bw.style.display = (sectionId === 'sec-welcome') ? 'none' : 'block';
 };
 
-/* ── WELCOME OVERVIEW GRID ── */
+/* ── WELCOME OVERVIEW GRID (sellers) / ROADMAP (buyers) ── */
 window.buildWelcome = function(cd) {
-  const isBuyer = cd.type === 'buyer';
-  const sections = isBuyer ? [
-    { num: '01', name: 'Questionnaire', desc: 'Tell us about your goals, timeline, and priorities.',  id: 'sec-questionnaire' },
-    { num: '02', name: 'Checklists',    desc: 'Step-by-step tasks from offer to keys.',               id: 'sec-checklists' },
-    { num: '03', name: 'Guides',        desc: 'Plain-language explainers for every phase.',            id: 'sec-guides' },
-    { num: '04', name: 'Key Dates',     desc: 'Your transaction timeline and critical deadlines.',     id: 'sec-key-dates' },
-    { num: '05', name: 'Contact',       desc: 'Kelsie, your TC, and your full transaction team.',      id: 'sec-contact' },
-  ] : [
-    { num: '01', name: 'Questionnaire',   desc: 'Your preferences and listing goals.',                  id: 'sec-questionnaire' },
-    { num: '02', name: 'Listing Info',    desc: 'Showings, access, and property details.',              id: 'sec-listing-info' },
-    { num: '03', name: 'Checklists',      desc: 'Pre-listing, active, and closing tasks.',              id: 'sec-checklists' },
-    { num: '04', name: 'Net Calculators', desc: 'Estimate your proceeds at closing.',                   id: 'sec-net-calculators' },
-    { num: '05', name: 'Showing Prefs',   desc: 'Your showing window and access instructions.',         id: 'sec-showing-prefs' },
-    { num: '06', name: 'Under Contract',  desc: 'What happens after you accept an offer.',              id: 'sec-under-contract' },
-    { num: '07', name: 'Closing',         desc: 'Final steps, settlement, and handoff.',                id: 'sec-closing' },
-    { num: '08', name: 'Contact',         desc: 'Your team from list to close.',                        id: 'sec-contact' },
+  if (cd.type !== 'buyer') {
+    const sections = [
+      { num: '01', name: 'Questionnaire',   desc: 'Your preferences and listing goals.',                  id: 'sec-questionnaire' },
+      { num: '02', name: 'Listing Info',    desc: 'Showings, access, and property details.',              id: 'sec-listing-info' },
+      { num: '03', name: 'Checklists',      desc: 'Pre-listing, active, and closing tasks.',              id: 'sec-checklists' },
+      { num: '04', name: 'Net Calculators', desc: 'Estimate your proceeds at closing.',                   id: 'sec-net-calculators' },
+      { num: '05', name: 'Showing Prefs',   desc: 'Your showing window and access instructions.',         id: 'sec-showing-prefs' },
+      { num: '06', name: 'Under Contract',  desc: 'What happens after you accept an offer.',              id: 'sec-under-contract' },
+      { num: '07', name: 'Closing',         desc: 'Final steps, settlement, and handoff.',                id: 'sec-closing' },
+      { num: '08', name: 'Contact',         desc: 'Your team from list to close.',                        id: 'sec-contact' },
+    ];
+    return `<div class="portal-overview">${sections.map(s =>
+      `<div class="portal-card">
+        <div class="portal-card-num">${s.num}</div>
+        <div class="portal-card-name">${s.name}</div>
+        <div class="portal-card-desc">${s.desc}</div>
+        <button class="portal-card-btn" onclick="openPortalSection('${s.id}')">Open →</button>
+      </div>`).join('')}</div>`;
+  }
+
+  // Buyer roadmap scaffold — populated by rmInit() after DOM insertion
+  const cid = cd.id || 'local';
+  const now = new Date();
+  const datesEnc = (JSON.stringify(cd.dates || [])).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  return `<div class="rm-wrap" id="rm-wrap-${cid}">
+    <div class="rm-progress-block">
+      <div class="rm-progress-header">
+        <span class="rm-progress-label">Your Progress</span>
+        <span class="rm-progress-count" id="rm-count-${cid}">Loading…</span>
+      </div>
+      <div class="rm-progress-track"><div class="rm-progress-fill" id="rm-bar-${cid}"></div></div>
+    </div>
+    <div class="rm-cal-wrap" id="rm-cal-${cid}" data-month="${now.getMonth()}" data-year="${now.getFullYear()}" data-dates="${datesEnc}">
+      <div class="rm-cal-header">
+        <button class="rm-cal-nav" onclick="rmCalNav('${cid}',-1)">&#8249;</button>
+        <span class="rm-cal-title" id="rm-cal-title-${cid}"></span>
+        <button class="rm-cal-nav" onclick="rmCalNav('${cid}',1)">&#8250;</button>
+      </div>
+      <div class="rm-cal-grid" id="rm-cal-grid-${cid}"></div>
+    </div>
+    <div class="rm-steps" id="rm-steps-${cid}"></div>
+  </div>`;
+};
+
+/* ══════════════════════════════════════════════
+   BUYER TRANSACTION ROADMAP
+══════════════════════════════════════════════ */
+
+const RM_SK = function(id) { return 'tpg_roadmap_' + id; };
+
+function rmLoad(cid) {
+  try { return JSON.parse(localStorage.getItem(RM_SK(cid))) || {}; }
+  catch(e) { return {}; }
+}
+function rmSave(cid, data) {
+  localStorage.setItem(RM_SK(cid), JSON.stringify(data));
+}
+
+function rmGetSteps() {
+  return [
+    { num:'01', title:'Complete Your Questionnaire',
+      desc:'Tell Kelsie about your goals, timeline, and priorities before your first meeting.',
+      btn:{ label:'Open Questionnaire →', fn:"rmGoToSection('Questionnaire')" } },
+    { num:'02', title:'Buyer Consultation with Kelsie',
+      desc:'Book a time to meet with Kelsie and get your questions answered.',
+      btn:{ label:'Book a Time →', href:'https://calendly.com/kelsie-utah/30min' } },
+    { num:'03', title:'Watch the REPC Walkthrough',
+      desc:'A recorded walkthrough of the Real Estate Purchase Contract so you know what you\'re signing.',
+      btn:{ label:'Watch Now →', href:'https://canva.link/e3w7pgu1v90czwu' } },
+    { num:'04', title:'Watch the BBA Walkthrough',
+      desc:'Understanding your Buyer Broker Agreement before you sign.',
+      btn:{ label:'Coming Soon', disabled:true } },
+    { num:'05', title:'Meet with Your Lender',
+      desc:'Get fully pre-approved before you start shopping — not just pre-qualified.',
+      lender:true },
+    { num:'06', title:'Shopping / Making Offers',
+      desc:'You\'re pre-approved and ready. Time to find the one.' },
+    { divider:true, label:'Under Contract' },
+    { num:'07', title:'Offer Accepted',
+      desc:'Your offer has been accepted. Here is what happens next.' },
+    { num:'08', title:'Earnest Money Due',
+      desc:'Earnest money must be deposited within 4 calendar days of acceptance. Your agent will send wire instructions.',
+      warning:'⚠️ Wire fraud is real. Always call to verify wire instructions before sending money. Never wire based on email alone.' },
+    { num:'09', title:'Inspections / Due Diligence',
+      desc:'Schedule your general inspection immediately — do not wait. Good inspectors book up fast.' },
+    { num:'10', title:'Seller Disclosures',
+      desc:'Review the seller\'s disclosures carefully. Ask Kelsie if anything looks off.' },
+    { num:'11', title:'Appraisal',
+      desc:'Your lender will order the appraisal. You do not need to be there.' },
+    { num:'12', title:'Loan Approval / Clear to Close',
+      desc:'Your lender has fully approved your loan. Almost there.' },
+    { num:'13', title:'Final Walkthrough',
+      desc:'Walk the home 24–48 hours before closing to confirm condition.' },
+    { num:'14', title:'Closing Day',
+      desc:'Bring your ID and get ready to sign. Keys are yours today. 🎉' },
   ];
-  return `<div class="portal-overview">${sections.map(s =>
-    `<div class="portal-card">
-      <div class="portal-card-num">${s.num}</div>
-      <div class="portal-card-name">${s.name}</div>
-      <div class="portal-card-desc">${s.desc}</div>
-      <button class="portal-card-btn" onclick="openPortalSection('${s.id}')">Open →</button>
-    </div>`).join('')}</div>`;
+}
+
+function rmGoToSection(label) {
+  const b = Array.from(document.querySelectorAll('.cp-jmp')).find(function(x){ return x.textContent.trim() === label; });
+  if (b) b.click();
+}
+
+const RM_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const RM_DAYS   = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+function rmParseDate(str) {
+  const p = (str || '').split('-');
+  if (p.length === 3) return new Date(+p[0], +p[1]-1, +p[2]);
+  return new Date(str);
+}
+
+function rmRenderCalendar(cid) {
+  const wrap = document.getElementById('rm-cal-' + cid);
+  if (!wrap) return;
+  const month = parseInt(wrap.dataset.month, 10);
+  const year  = parseInt(wrap.dataset.year,  10);
+  let dates = [];
+  try { dates = JSON.parse(wrap.dataset.dates || '[]'); } catch(e) {}
+
+  const titleEl = document.getElementById('rm-cal-title-' + cid);
+  if (titleEl) titleEl.textContent = RM_MONTHS[month] + ' ' + year;
+
+  const today    = new Date();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const dateLookup = {};
+  dates.forEach(function(d) {
+    if (!d.date) return;
+    const dt = rmParseDate(d.date);
+    if (isNaN(dt)) return;
+    const key = dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
+    dateLookup[key] = d.label || d.status || '';
+  });
+
+  let html = RM_DAYS.map(function(d){ return '<div class="rm-cal-day-label">' + d + '</div>'; }).join('');
+  for (let i = 0; i < firstDay; i++) html += '<div class="rm-cal-cell rm-other"><span></span></div>';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const label   = dateLookup[key] || '';
+    const hasDate = !!label;
+    const isToday = today.getFullYear()===year && today.getMonth()===month && today.getDate()===d;
+    let cls = 'rm-cal-cell';
+    if (hasDate) cls += ' rm-has-date';
+    else if (isToday) cls += ' rm-today';
+    html += '<div class="' + cls + '">' +
+      '<span>' + d + '</span>' +
+      (hasDate ? '<div class="rm-date-label">' + label + '</div>' : '') +
+      '</div>';
+  }
+
+  const gridEl = document.getElementById('rm-cal-grid-' + cid);
+  if (gridEl) gridEl.innerHTML = html;
+}
+
+function rmCalNav(cid, dir) {
+  const wrap = document.getElementById('rm-cal-' + cid);
+  if (!wrap) return;
+  let month = parseInt(wrap.dataset.month, 10) + dir;
+  let year  = parseInt(wrap.dataset.year,  10);
+  if (month < 0)  { month = 11; year--; }
+  if (month > 11) { month = 0;  year++; }
+  wrap.dataset.month = month;
+  wrap.dataset.year  = year;
+  rmRenderCalendar(cid);
+}
+
+function rmUpdateProgress(cid) {
+  const steps = rmGetSteps().filter(function(s){ return !s.divider; });
+  const state = rmLoad(cid);
+  const done  = steps.filter(function(s){ return state['step_' + s.num]; }).length;
+  const pct   = steps.length > 0 ? Math.round(done / steps.length * 100) : 0;
+  const bar   = document.getElementById('rm-bar-'   + cid);
+  const count = document.getElementById('rm-count-' + cid);
+  if (bar)   bar.style.width = pct + '%';
+  if (count) count.textContent = done + ' of ' + steps.length + ' steps complete';
+}
+
+function rmToggleStep(cid, stepNum) {
+  const state = rmLoad(cid);
+  const key   = 'step_' + stepNum;
+  state[key]  = !state[key];
+  rmSave(cid, state);
+  const card = document.querySelector('[data-rm-step="' + cid + '-' + stepNum + '"]');
+  if (card) {
+    card.classList.toggle('done', !!state[key]);
+    const cb = card.querySelector('.rm-check-btn');
+    if (cb) cb.classList.toggle('checked', !!state[key]);
+  }
+  rmUpdateProgress(cid);
+}
+
+function rmInit(cid, dates) {
+  const steps = rmGetSteps();
+  const state = rmLoad(cid);
+  const stepsEl = document.getElementById('rm-steps-' + cid);
+  if (!stepsEl) return;
+
+  stepsEl.innerHTML = steps.map(function(s) {
+    if (s.divider) {
+      return '<div class="rm-phase-divider">' +
+        '<div class="rm-phase-line"></div>' +
+        '<div class="rm-phase-label">' + s.label + '</div>' +
+        '<div class="rm-phase-line"></div>' +
+        '</div>';
+    }
+    const done = !!state['step_' + s.num];
+    let extras = '';
+
+    if (s.btn) {
+      if (s.btn.href) {
+        extras += '<a href="' + s.btn.href + '" target="_blank" rel="noopener" class="rm-step-btn">' + s.btn.label + '</a>';
+      } else if (s.btn.fn) {
+        extras += '<button class="rm-step-btn" onclick="' + s.btn.fn + '">' + s.btn.label + '</button>';
+      } else if (s.btn.disabled) {
+        extras += '<button class="rm-step-btn rm-disabled" disabled>' + s.btn.label + '</button>';
+      }
+    }
+    if (s.lender) {
+      extras += '<div class="rm-lender-card">' +
+        '<div class="rm-lender-name">TJ Shelley</div>' +
+        '<div class="rm-lender-co">First Colony Home Loans</div>' +
+        '<div class="rm-lender-links">' +
+          '<a href="tel:8016608661">801-660-8661</a>' +
+          '<a href="mailto:tjs@firstcolonymortgage.com">tjs@firstcolonymortgage.com</a>' +
+        '</div>' +
+        '<div class="rm-lender-note">Kelsie recommends TJ but encourages you to loan shop. Getting multiple quotes is always a smart move.</div>' +
+        '</div>';
+    }
+    if (s.warning) {
+      extras += '<div class="rm-warning">' + s.warning + '</div>';
+    }
+
+    return '<div class="rm-step' + (done ? ' done' : '') + '" data-rm-step="' + cid + '-' + s.num + '">' +
+      '<div class="rm-step-body">' +
+        '<div class="rm-step-num">' + s.num + '</div>' +
+        '<div class="rm-step-title">' + s.title + '</div>' +
+        '<div class="rm-step-desc">' + s.desc + '</div>' +
+        extras +
+      '</div>' +
+      '<div class="rm-check">' +
+        '<button class="rm-check-btn' + (done ? ' checked' : '') + '" onclick="rmToggleStep(\'' + cid + '\',\'' + s.num + '\')" title="' + (done ? 'Mark incomplete' : 'Mark complete') + '">' +
+          '<svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  rmRenderCalendar(cid);
+  rmUpdateProgress(cid);
+}
+
+/* Hook showClientPortal to init roadmap after DOM is built */
+const _rmShowCP = window.showClientPortal;
+window.showClientPortal = function(cd) {
+  _rmShowCP(cd);
+  if (cd.type === 'buyer') {
+    setTimeout(function(){ rmInit(cd.id || 'local', cd.dates || []); }, 20);
+  }
 };
 
 // All overrides loaded — safe to route now
