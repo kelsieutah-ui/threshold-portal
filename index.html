@@ -1214,7 +1214,7 @@ function showClientPortal(cd){
   const isBuyer=cd.type==='buyer';
   document.getElementById('cp-type-label').textContent=(isBuyer?'Buyer':'Seller')+' Portal · The Perry Group';
   document.getElementById('cp-name').textContent='Welcome, '+(cd.name||'').split(' ')[0];
-  document.getElementById('cp-addr').textContent=cd.address||'';
+  document.getElementById('cp-addr').textContent=(cd.address||'').replace(/[—–·•]/g,' - ').split(',').map(p=>p.trim()).filter(Boolean).join(' - ');
   // Build jump pills
   const tabs=isBuyer?['Welcome','Questionnaire','Checklists','Guides','Key Dates','Contact']:['Welcome','Questionnaire','Listing Info','Checklists','Net Calculators','Showing Prefs','Under Contract','Closing','Contact'];
   document.getElementById('cp-nav').innerHTML=tabs.map((t,i)=>`<button class="cp-jmp${i===0?' act':''}" onclick="cpJump('sec-${t.toLowerCase().replace(/ /g,'-')}',this)">${t}</button>`).join('');
@@ -2369,7 +2369,7 @@ window.showClientPortal = function(cd) {
   const isBuyer = cd.type === 'buyer';
   document.getElementById('cp-type-label').textContent = (isBuyer?'Buyer':'Seller') + ' Portal · The Perry Group';
   document.getElementById('cp-name').textContent = 'Welcome, ' + (cd.name||'').split(' ')[0];
-  document.getElementById('cp-addr').textContent = cd.address || '';
+  document.getElementById('cp-addr').textContent = (cd.address || '').replace(/[—–·•]/g, ' - ').split(',').map(p => p.trim()).filter(Boolean).join(' - ');
   const tabs = isBuyer
     ? ['Welcome','Questionnaire','Checklists','Guides','Key Dates','Contact']
     : ['Welcome','Questionnaire','Listing Info','Checklists','Net Calculators','Showing Prefs','Under Contract','Closing','Contact'];
@@ -4532,7 +4532,7 @@ window.showClientPortal = function(cd) {
   const isBuyer = cd.type === 'buyer';
   document.getElementById('cp-type-label').textContent = (isBuyer?'Buyer':'Seller') + ' Portal · The Perry Group';
   document.getElementById('cp-name').textContent = 'Welcome, ' + (cd.name||'').split(' ')[0];
-  document.getElementById('cp-addr').textContent = cd.address || '';
+  document.getElementById('cp-addr').textContent = (cd.address || '').replace(/[—–·•]/g, ' - ').split(',').map(p => p.trim()).filter(Boolean).join(' - ');
   const tabs = isBuyer
     ? ['Welcome','Questionnaire','Checklists','Guides','Key Dates','Contact']
     : ['Welcome','Questionnaire','Listing Info','Checklists','Net Calculators','Showing Prefs','Under Contract','Closing','Contact'];
@@ -7516,7 +7516,7 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
   z-index: 0;
   pointer-events: none;
 }
-.cp-hero::after { display: none; }
+.cp-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--cream)); pointer-events: none; z-index: 2; }
 .cp-hero-inner { position: relative; z-index: 1; }
 .cp-h1 { font-family: 'Playfair Display', serif; font-size: 52px; color: var(--warm); font-weight: 600; margin: 0 0 8px; line-height: 1.1; letter-spacing: .01em; }
 .cp-addr { font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.5); font-weight: 400; margin: 0; }
@@ -7920,7 +7920,7 @@ window.showClientPortal = function(cd) {
   const isBuyer = cd.type === 'buyer';
   document.getElementById('cp-type-label').textContent = (isBuyer?'Buyer':'Seller') + ' Portal · The Perry Group';
   document.getElementById('cp-name').textContent = 'Welcome, ' + (cd.name||'').split(' ')[0];
-  document.getElementById('cp-addr').innerHTML = (cd.address || '').split(',').map(p => p.trim().replace(/&/g,'&amp;')).filter(Boolean).join(' &middot; ');
+  document.getElementById('cp-addr').textContent = (cd.address || '').replace(/[—–·•]/g, ' - ').split(',').map(p => p.trim()).filter(Boolean).join(' - ');
 
   const tabs = isBuyer
     ? ['Welcome','Questionnaire','Checklists','Guides','Key Dates','Contact']
