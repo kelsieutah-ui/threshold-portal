@@ -500,21 +500,16 @@ body.editing .add-cl-item-btn{display:block}
   <!-- CLIENT DETAIL -->
   <div id="view-client-detail" style="display:none">
     <div class="cd-banner">
-      <button class="back-btn" onclick="backToDash()">← Dashboard</button>
-      <div class="cd-tabs">
-        <button class="cd-tab active" id="cdtab-portal" onclick="switchCDTab('portal')">Client Portal</button>
-        <button class="cd-tab" id="cdtab-tasks" onclick="switchCDTab('tasks')">Internal Tasks</button>
-      </div>
+      <button class="back-btn" onclick="backToDash()">&#8592; Dashboard</button>
+      <div class="cd-client-title" id="cd-client-name"></div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost btn-sm" onclick="openEditClientModal()">Edit Client</button>
         <button class="btn btn-ghost btn-sm" id="copy-link-btn" onclick="copyClientLink()">Copy Link</button>
-        <button class="btn btn-sage btn-sm" id="edit-content-btn" onclick="toggleEditMode()">✏️ Edit Portal Text</button>
       </div>
     </div>
-    <div class="cd-layout">
-    <div class="edit-mode-bar" id="edit-mode-bar" style="display:none"><div class="em-label">✏️ <span>Edit Mode Active</span></div><div class="em-hint">Click any text to edit it directly. Changes save automatically. Add, edit, or delete checklist items using the controls that appear.</div><button class="btn btn-sage btn-sm" onclick="toggleEditMode()">Done Editing</button></div>
-      <div class="cd-main" id="cd-main-area"></div>
-      <div class="cd-sidebar" id="cd-sidebar"></div>
+    <div id="cd-main-area" style="display:none"></div>
+    <div class="cd-new-layout">
+      <div class="cd-col-left" id="cd-left-panel"></div>
+      <div class="cd-col-right" id="cd-right-panel"></div>
     </div>
   </div>
 
@@ -805,68 +800,162 @@ function setDashView(v){
 let _cdTab='portal';
 function openClientDetail(id){
   _editingClientId=id;
-  _cdTab='portal';
   document.getElementById('agent-main-nav').style.display='none';
   ['view-dashboard','view-templates','view-ltfu'].forEach(v=>document.getElementById(v).style.display='none');
   document.getElementById('view-client-detail').style.display='block';
-  switchCDTab('portal');
+  renderClientDetail();
 }
 
 function switchCDTab(tab){
   _cdTab=tab;
-  document.getElementById('cdtab-portal').classList.toggle('active',tab==='portal');
-  document.getElementById('cdtab-tasks').classList.toggle('active',tab==='tasks');
   renderClientDetail();
 }
 
 function renderClientDetail(){
-  const c=getClient(_editingClientId);if(!c)return;
-  // Banner info
-  document.getElementById('copy-link-btn').setAttribute('data-id',c.id);
-  // Sidebar
-  renderCDSidebar(c);
-  if(_cdTab==='portal'){
-    const main=document.getElementById('cd-main-area');
-    main.innerHTML='';
-    const wrap=buildPortalWrap(c);
-    main.appendChild(wrap);
-  } else {
-    renderInternalTasks(c);
+  var c=getClient(_editingClientId);if(!c)return;
+  var el=document.getElementById('cd-client-name');
+  if(el)el.textContent=c.name;
+  var btn=document.getElementById('copy-link-btn');
+  if(btn)btn.setAttribute('data-id',c.id);
+  document.getElementById('cd-left-panel').innerHTML=buildCDClientInfo(c)+buildCDKeyDates(c)+buildCDQuickActions(c);
+  document.getElementById('cd-right-panel').innerHTML=buildCDNotes(c)+'<div class="cd-card" id="cd-tasks-card"><div class="cd-card-hd">Internal Tasks</div><div id="cd-tasks-inner"></div></div>';
+  renderInternalTasks(c);
+}
+
+function buildCDClientInfo(c){
+  var isBuyer=c.type==='buyer';
+  return '<div class="cd-card">'+
+    '<div class="cd-card-hd">Client Info</div>'+
+    '<div class="cd-field"><label class="cd-lbl">Full Name</label>'+
+      '<input class="cd-input" value="'+(c.name||'').replace(/"/g,'&quot;')+'" oninput="cdSave(\'name\',this.value)"></div>'+
+    '<div class="cd-field"><label class="cd-lbl">Address</label>'+
+      '<input class="cd-input" value="'+(c.address||'').replace(/"/g,'&quot;')+'" oninput="cdSave(\'address\',this.value)"></div>'+
+    '<div class="cd-row-2">'+
+      '<div class="cd-field"><label class="cd-lbl">Type</label>'+
+        '<select class="cd-input" onchange="cdSave(\'type\',this.value)">'+
+          '<option value="buyer"'+(c.type==='buyer'?' selected':'')+'>Buyer</option>'+
+          '<option value="seller"'+(c.type==='seller'?' selected':'')+'>Seller</option>'+
+        '</select></div>'+
+      '<div class="cd-field"><label class="cd-lbl">Stage</label>'+
+        '<select class="cd-input" onchange="cdSave(\'stage\',this.value)">'+
+          STAGES.map(function(s){return '<option value="'+s+'"'+(c.stage===s?' selected':'')+'>'+s+'</option>';}).join('')+
+        '</select></div>'+
+    '</div>'+
+    '<div class="cd-row-2">'+
+      '<div class="cd-field"><label class="cd-lbl">Phone</label>'+
+        '<input class="cd-input" type="tel" value="'+(c.phone||'').replace(/"/g,'&quot;')+'" oninput="cdSave(\'phone\',this.value)"></div>'+
+      '<div class="cd-field"><label class="cd-lbl">Email</label>'+
+        '<input class="cd-input" type="email" value="'+(c.email||'').replace(/"/g,'&quot;')+'" oninput="cdSave(\'email\',this.value)"></div>'+
+    '</div>'+
+    (!isBuyer?
+      '<div class="cd-field"><label class="cd-lbl">List Price</label>'+
+        '<input class="cd-input" value="'+(c.listPrice||'').replace(/"/g,'&quot;')+'" placeholder="$550,000" oninput="cdSave(\'listPrice\',this.value)"></div>':'')+
+    '<div class="cd-field"><label class="cd-lbl">Closing Date</label>'+
+      '<input class="cd-input" type="date" value="'+(c.closing||'')+'" onchange="cdSave(\'closing\',this.value)"></div>'+
+    '<div class="cd-field"><label class="cd-lbl">Message to Client <span class="cd-lbl-hint">appears on their Welcome screen</span></label>'+
+      '<textarea class="cd-textarea cd-textarea-sm" oninput="updateMsg(this.value)" placeholder="Current action item, what to expect this week...">'+(c.agentMsg||'')+'</textarea></div>'+
+  '</div>';
+}
+
+function buildCDKeyDates(c){
+  var key='tpg_extra_dates_'+c.id;
+  var extra=JSON.parse(localStorage.getItem(key)||'[]');
+  var core=(c.dates||[]).map(function(d){return Object.assign({},d,{_core:true});});
+  var all=core.concat(extra).filter(function(d){return d.date;}).sort(function(a,b){return a.date>b.date?1:-1;});
+  var SL={upcoming:'Upcoming',critical:'Critical',done:'Done'};
+  var rows='';
+  all.forEach(function(d){
+    var dt=new Date(d.date+'T12:00:00');
+    var mon=dt.toLocaleString('en',{month:'short'}).toUpperCase();
+    var day=dt.getDate();
+    rows+='<div class="cd-date-row">'+
+      '<div class="date-cal" style="flex-shrink:0"><div class="dcal-m">'+mon+'</div><div class="dcal-d">'+day+'</div></div>'+
+      '<div class="cd-date-info"><div class="cd-date-label">'+d.label+'</div>'+
+        '<span class="ds ds-'+(d.status||'upcoming')+'">'+(SL[d.status]||d.status)+'</span></div>'+
+      '<button class="cd-del-btn" onclick="cdDeleteDate(\''+d.id+'\',\''+c.id+'\','+(d._core?'false':'true')+')" title="Remove">&#215;</button>'+
+    '</div>';
+  });
+  return '<div class="cd-card">'+
+    '<div class="cd-card-hd">Key Dates</div>'+
+    (all.length?'<div class="cd-dates-list">'+rows+'</div>':'<div class="cd-empty">No dates added yet.</div>')+
+    '<div class="cd-date-add">'+
+      '<input class="cd-input cd-input-flex" id="cdd-label" placeholder="Label">'+
+      '<input class="cd-input cd-input-date" id="cdd-date" type="date">'+
+      '<select class="cd-input cd-input-status" id="cdd-status">'+
+        '<option value="upcoming">Upcoming</option>'+
+        '<option value="critical">Critical</option>'+
+        '<option value="done">Done</option>'+
+      '</select>'+
+      '<button class="btn btn-sage btn-sm" onclick="cdAddDate(\''+c.id+'\')">+ Add</button>'+
+    '</div>'+
+    '<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:10px" onclick="cdRegenerateLink()">&#8635; Regenerate &amp; Copy Portal Link</button>'+
+  '</div>';
+}
+
+function buildCDQuickActions(c){
+  var phone=(c.phone||'').replace(/\D/g,'');
+  var html='<div class="cd-quick-actions">';
+  if(phone)html+='<a href="sms:'+phone+'" class="btn btn-outline-sage btn-sm" style="text-decoration:none;display:inline-flex">&#128241; Text Client</a>';
+  if(c.email)html+='<a href="mailto:'+encodeURIComponent(c.email)+'" class="btn btn-outline-sage btn-sm" style="text-decoration:none;display:inline-flex">&#9993; Email Client</a>';
+  html+='</div>';
+  return html;
+}
+
+function buildCDNotes(c){
+  return '<div class="cd-card">'+
+    '<div class="cd-card-hd">Agent Notes</div>'+
+    '<div class="cd-card-hint">Never visible to client</div>'+
+    '<textarea class="cd-textarea" oninput="updateNotes(this.value)" placeholder="Notes for your records...">'+(c.agentNotes||'')+'</textarea>'+
+  '</div>';
+}
+
+function cdSave(field,value){
+  var c=getClient(_editingClientId);
+  c[field]=value;
+  if(field==='stage'&&value==='Long Term Follow Up'&&!c.ltfuStage)c.ltfuStage='7 Day Follow Up';
+  if(field==='closing'&&value&&!(c.dates||[]).find(function(d){return d.label.toLowerCase().indexOf('closing')>=0;})){
+    if(!c.dates)c.dates=[];
+    c.dates.push({id:uid(),label:'Closing Day',date:value,status:'upcoming',desc:''});
+  }
+  upsertClient(c);
+  if(field==='closing'||field==='type'){
+    var c2=getClient(_editingClientId);
+    document.getElementById('cd-left-panel').innerHTML=buildCDClientInfo(c2)+buildCDKeyDates(c2)+buildCDQuickActions(c2);
   }
 }
 
-function renderCDSidebar(c){
-  document.getElementById('cd-sidebar').innerHTML=`
-    <h4>${c.name}</h4>
-    <div class="field"><label>Stage</label>
-      <select style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-size:13px;background:var(--white);color:var(--text)" onchange="updateStage(this.value)">
-        ${STAGES.map(s=>`<option${c.stage===s?' selected':''}>${s}</option>`).join('')}
-      </select>
-    </div>
-    <div class="sidebar-meta">
-      📧 ${c.email||'—'}<br>
-      📞 ${c.phone||'—'}<br>
-      🏠 ${c.type} · ${c.address}<br>
-      ${c.closing?`📅 Closing: <strong>${fmtDate(c.closing)}</strong><br>`:''}
-    </div>
-    <div class="field"><label>Agent Notes (internal)</label>
-      <textarea style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-size:13px;min-height:80px;resize:vertical;color:var(--text)" oninput="updateNotes(this.value)">${c.agentNotes||''}</textarea>
-    </div>
-    <div class="field"><label>Message to Client (in Welcome tab)</label>
-      <textarea style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-size:13px;min-height:70px;resize:vertical;color:var(--text)" oninput="updateMsg(this.value)">${c.agentMsg||''}</textarea>
-    </div>
-    <hr>
-    <h4>Shareable Link</h4>
-    <div style="font-size:11.5px;color:var(--muted);margin-bottom:8px">Send to client. Regenerate after updating dates or info.</div>
-    <div class="link-box">${generateLink(c).substr(0,80)}…</div>
-    <button class="btn btn-sage" style="width:100%;justify-content:center" onclick="copyLinkFor('${c.id}')">Copy Link</button>
-    <div style="margin-top:14px"><button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" onclick="openEditClientModal('${c.id}')">Edit Client Info</button></div>
-  `;
+function cdDeleteDate(dateId,clientId,isExtra){
+  if(isExtra){
+    var key='tpg_extra_dates_'+clientId;
+    var extra=JSON.parse(localStorage.getItem(key)||'[]').filter(function(d){return d.id!==dateId;});
+    localStorage.setItem(key,JSON.stringify(extra));
+  }else{
+    var c=getClient(clientId);
+    c.dates=(c.dates||[]).filter(function(d){return d.id!==dateId;});
+    upsertClient(c);
+  }
+  var c2=getClient(clientId);
+  document.getElementById('cd-left-panel').innerHTML=buildCDClientInfo(c2)+buildCDKeyDates(c2)+buildCDQuickActions(c2);
 }
 
-function updateStage(v){const c=getClient(_editingClientId);c.stage=v;if(v==='Long Term Follow Up'&&!c.ltfuStage)c.ltfuStage='7 Day Follow Up';upsertClient(c);renderCDSidebar(c);}
-function updateNotes(v){const c=getClient(_editingClientId);c.agentNotes=v;upsertClient(c);}
-function updateMsg(v){const c=getClient(_editingClientId);c.agentMsg=v;upsertClient(c);}
+function cdAddDate(clientId){
+  var label=(document.getElementById('cdd-label').value||'').trim();
+  var date=document.getElementById('cdd-date').value;
+  var status=document.getElementById('cdd-status').value;
+  if(!label||!date)return;
+  var key='tpg_extra_dates_'+clientId;
+  var extra=JSON.parse(localStorage.getItem(key)||'[]');
+  extra.push({id:uid(),label:label,date:date,status:status,desc:''});
+  localStorage.setItem(key,JSON.stringify(extra));
+  var c=getClient(clientId);
+  document.getElementById('cd-left-panel').innerHTML=buildCDClientInfo(c)+buildCDKeyDates(c)+buildCDQuickActions(c);
+}
+
+function cdRegenerateLink(){copyLinkFor(_editingClientId);}
+
+function updateStage(v){var c=getClient(_editingClientId);c.stage=v;if(v==='Long Term Follow Up'&&!c.ltfuStage)c.ltfuStage='7 Day Follow Up';upsertClient(c);}
+function updateNotes(v){var c=getClient(_editingClientId);c.agentNotes=v;upsertClient(c);}
+function updateMsg(v){var c=getClient(_editingClientId);c.agentMsg=v;upsertClient(c);}
 
 function backToDash(){
   _editingClientId=null;
@@ -3505,7 +3594,8 @@ window.renderInternalTasks = function(c) {
     </div>`;
   });
   html += '</div>';
-  document.getElementById('cd-main-area').innerHTML = html;
+  var _tgt = document.getElementById('cd-tasks-inner') || document.getElementById('cd-main-area');
+  if (_tgt) _tgt.innerHTML = html;
 };
 
 /* ══════════════════════════════════════════════
@@ -7731,6 +7821,40 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
 .rm-phase-dot::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--sage); opacity: .5; display: block; }
 .rm-phase-label { font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sage); padding-left: 12px; }
 .rm-cal-tip { position: fixed; z-index: 9999; background: var(--dark); color: #fff; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .2px; padding: 5px 11px; border-radius: 6px; white-space: nowrap; pointer-events: none; transform: translateX(-50%); box-shadow: 0 3px 14px rgba(0,0,0,.28); }
+
+/* ── Agent client detail two-column layout ── */
+.cd-client-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--cream); flex: 1; text-align: center; }
+.cd-new-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 18px; max-width: 1100px; margin: 0 auto; }
+.cd-col-left, .cd-col-right { display: flex; flex-direction: column; gap: 14px; }
+.cd-card { background: rgba(248,240,226,.04); border: 1px solid rgba(153,161,137,.13); border-radius: 10px; padding: 18px 20px; }
+.cd-card-hd { font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); margin-bottom: 14px; }
+.cd-card-hint { font-size: 11px; color: rgba(248,240,226,.35); margin-bottom: 14px; margin-top: -10px; }
+.cd-lbl { display: block; font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(248,240,226,.45); margin-bottom: 4px; }
+.cd-lbl-hint { font-size: 9px; letter-spacing: .5px; color: rgba(248,240,226,.28); text-transform: none; font-weight: 400; }
+.cd-field { margin-bottom: 12px; }
+.cd-field:last-child { margin-bottom: 0; }
+.cd-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cd-input { width: 100%; background: rgba(248,240,226,.06); border: 1px solid rgba(153,161,137,.18); border-radius: 6px; padding: 8px 10px; font-family: 'Jost', sans-serif; font-size: 13px; color: var(--cream); box-sizing: border-box; outline: none; transition: border-color .15s; }
+.cd-input:focus { border-color: rgba(153,161,137,.45); }
+.cd-textarea { width: 100%; background: rgba(248,240,226,.06); border: 1px solid rgba(153,161,137,.18); border-radius: 6px; padding: 8px 10px; font-family: 'Jost', sans-serif; font-size: 13px; color: var(--cream); box-sizing: border-box; outline: none; resize: vertical; min-height: 80px; transition: border-color .15s; }
+.cd-textarea:focus { border-color: rgba(153,161,137,.45); }
+.cd-textarea-sm { min-height: 56px; }
+.cd-dates-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.cd-date-row { display: flex; align-items: center; gap: 8px; }
+.cd-date-info { flex: 1; min-width: 0; }
+.cd-date-label { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; color: var(--cream); }
+.cd-del-btn { background: none; border: none; color: rgba(248,240,226,.3); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: color .15s; flex-shrink: 0; }
+.cd-del-btn:hover { color: #c97878; }
+.cd-date-add { margin-top: 10px; border-top: 1px solid rgba(153,161,137,.1); padding-top: 10px; }
+.cd-input-flex { display: flex; gap: 6px; flex-wrap: wrap; }
+.cd-input-date { flex: 1; min-width: 110px; }
+.cd-input-status { flex: 1; min-width: 90px; }
+.cd-empty { font-family: 'Jost', sans-serif; font-size: 12px; color: rgba(248,240,226,.28); padding: 4px 0 10px; }
+.cd-quick-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-outline-sage { background: transparent; border: 1px solid rgba(153,161,137,.35); color: var(--sage); font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; padding: 7px 14px; border-radius: 20px; cursor: pointer; transition: background .15s, border-color .15s; }
+.btn-outline-sage:hover { background: rgba(153,161,137,.12); border-color: rgba(153,161,137,.55); }
+#cd-tasks-card .tasks-wrap { max-width: none; margin: 0; padding: 0; background: none; border: none; box-shadow: none; }
+@media (max-width: 760px) { .cd-new-layout { grid-template-columns: 1fr; padding: 12px; } }
 </style>
 
 <script>
