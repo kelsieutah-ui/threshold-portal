@@ -7563,8 +7563,9 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
 
 /* ── STICKY NAV (frosted glass over hero) ── */
 #cp-sticky { position: sticky; top: 0; z-index: 100; background: rgba(26,43,26,.7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: none; }
-.cp-jump-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 20px; max-width: 900px; margin: 0 auto; background: none !important; border-radius: 0 !important; box-shadow: none !important; }
-.cp-jmp { padding: 8px 18px; border-radius: 30px; border: 1.5px solid rgba(255,255,255,.22); background: transparent; font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: rgba(255,255,255,.72); cursor: pointer; transition: all .2s; }
+.cp-jump-row { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 8px; padding: 10px 16px; margin: 0; background: none !important; border-radius: 0 !important; box-shadow: none !important; }
+.cp-jump-row::-webkit-scrollbar { display: none; }
+.cp-jmp { flex-shrink: 0; white-space: nowrap; padding: 8px 18px; border-radius: 30px; border: 1.5px solid rgba(255,255,255,.22); background: transparent; font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: rgba(255,255,255,.72); cursor: pointer; transition: all .2s; }
 .cp-jmp.act { background: var(--sage); color: #fff; border-color: var(--sage); }
 .cp-jmp:hover { border-color: rgba(255,255,255,.5); color: #fff; }
 
@@ -7660,6 +7661,11 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
 .rm-detail-complete { display: block; width: 100%; padding: 14px; background: var(--sage); color: #fff; border: none; border-radius: 8px; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin-top: 32px; transition: background .2s; text-align: center; }
 .rm-detail-complete:hover { background: var(--dark); }
 .rm-detail-complete.already-done { background: var(--border); color: var(--soft); pointer-events: none; }
+
+@media (max-width: 480px) {
+  .cp-h1 { font-size: 36px; }
+  .cp-hero { padding: 0 0 32px 20px; }
+}
 </style>
 
 <script>
