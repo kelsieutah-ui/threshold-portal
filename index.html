@@ -8315,6 +8315,10 @@ function rmRenderCalendar(cid) {
   const year  = parseInt(wrap.dataset.year,  10);
   let dates = [];
   try { dates = JSON.parse(wrap.dataset.dates || '[]'); } catch(e) {}
+  try {
+    const extra = JSON.parse(localStorage.getItem('tpg_extra_dates_' + cid) || '[]');
+    dates = dates.concat(extra.filter(function(d){ return d.date; }));
+  } catch(e) {}
 
   const titleEl = document.getElementById('rm-cal-title-' + cid);
   if (titleEl) titleEl.textContent = RM_MONTHS[month] + ' ' + year;
