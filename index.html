@@ -782,7 +782,7 @@ function renderDashboard(){
     return`<div class="pcol${isLTFU?' ltfu-col':''}">
       <div class="pcol-hdr"><h3>${s}</h3><span class="pcol-count">${col.length}</span></div>
       ${col.map(c=>`<div class="pcard${isLTFU?' ltfu-card':''}" onclick="openClientDetail('${c.id}')">
-        <div class="pn">${c.name}</div><div class="pa">${c.address.split(',')[0]}</div>
+        <div class="pn">${c.name}</div><div class="pa">${(c.address||'').split(',')[0]}</div>
         <div style="margin-top:6px"><span class="badge ${c.type==='buyer'?'b-buyer':'b-seller'}" style="font-size:10px">${c.type}</span></div>
       </div>`).join('')}
     </div>`;
@@ -825,35 +825,36 @@ function renderClientDetail(){
 function buildCDClientInfo(c){
   var isBuyer=c.type==='buyer';
   return '<div class="cd-card">'+
-    '<div class="cd-card-hd">Client Info</div>'+
+    '<div class="cd-card-hd">Client Info <span id="cd-saved-badge" style="font-size:11px;color:var(--sage);font-family:Jost,sans-serif;font-weight:600;letter-spacing:.3px;margin-left:8px;opacity:0;transition:opacity .35s">Saved ✓</span></div>'+
     '<div class="cd-field"><label class="cd-lbl">Full Name</label>'+
-      '<input class="cd-input" value="'+(c.name||'').replace(/"/g,'&quot;')+'" oninput="cdSave(\'name\',this.value)"></div>'+
+      '<input id="cdi-name" class="cd-input" value="'+(c.name||'').replace(/"/g,'&quot;')+'" onblur="cdSave(\'name\',this.value)"></div>'+
     '<div class="cd-field"><label class="cd-lbl">Address</label>'+
-      '<input class="cd-input" value="'+(c.address||'').replace(/"/g,'&quot;')+'" oninput="cdSave(\'address\',this.value)"></div>'+
+      '<input id="cdi-address" class="cd-input" value="'+(c.address||'').replace(/"/g,'&quot;')+'" onblur="cdSave(\'address\',this.value)"></div>'+
     '<div class="cd-row-2">'+
       '<div class="cd-field"><label class="cd-lbl">Type</label>'+
-        '<select class="cd-input" onchange="cdSave(\'type\',this.value)">'+
+        '<select id="cdi-type" class="cd-input" onchange="cdSave(\'type\',this.value)">'+
           '<option value="buyer"'+(c.type==='buyer'?' selected':'')+'>Buyer</option>'+
           '<option value="seller"'+(c.type==='seller'?' selected':'')+'>Seller</option>'+
         '</select></div>'+
       '<div class="cd-field"><label class="cd-lbl">Stage</label>'+
-        '<select class="cd-input" onchange="cdSave(\'stage\',this.value)">'+
+        '<select id="cdi-stage" class="cd-input" onchange="cdSave(\'stage\',this.value)">'+
           STAGES.map(function(s){return '<option value="'+s+'"'+(c.stage===s?' selected':'')+'>'+s+'</option>';}).join('')+
         '</select></div>'+
     '</div>'+
     '<div class="cd-row-2">'+
       '<div class="cd-field"><label class="cd-lbl">Phone</label>'+
-        '<input class="cd-input" type="tel" value="'+(c.phone||'').replace(/"/g,'&quot;')+'" oninput="cdSave(\'phone\',this.value)"></div>'+
+        '<input id="cdi-phone" class="cd-input" type="tel" value="'+(c.phone||'').replace(/"/g,'&quot;')+'" onblur="cdSave(\'phone\',this.value)"></div>'+
       '<div class="cd-field"><label class="cd-lbl">Email</label>'+
-        '<input class="cd-input" type="email" value="'+(c.email||'').replace(/"/g,'&quot;')+'" oninput="cdSave(\'email\',this.value)"></div>'+
+        '<input id="cdi-email" class="cd-input" type="email" value="'+(c.email||'').replace(/"/g,'&quot;')+'" onblur="cdSave(\'email\',this.value)"></div>'+
     '</div>'+
     (!isBuyer?
       '<div class="cd-field"><label class="cd-lbl">List Price</label>'+
-        '<input class="cd-input" value="'+(c.listPrice||'').replace(/"/g,'&quot;')+'" placeholder="$550,000" oninput="cdSave(\'listPrice\',this.value)"></div>':'')+
+        '<input id="cdi-listprice" class="cd-input" value="'+(c.listPrice||'').replace(/"/g,'&quot;')+'" placeholder="$550,000" onblur="cdSave(\'listPrice\',this.value)"></div>':'')+
     '<div class="cd-field"><label class="cd-lbl">Closing Date</label>'+
-      '<input class="cd-input" type="date" value="'+(c.closing||'')+'" onchange="cdSave(\'closing\',this.value)"></div>'+
+      '<input id="cdi-closing" class="cd-input" type="date" value="'+(c.closing||'')+'" onchange="cdSave(\'closing\',this.value)"></div>'+
     '<div class="cd-field"><label class="cd-lbl">Message to Client <span class="cd-lbl-hint">appears on their Welcome screen</span></label>'+
-      '<textarea class="cd-textarea cd-textarea-sm" oninput="updateMsg(this.value)" placeholder="Current action item, what to expect this week...">'+(c.agentMsg||'')+'</textarea></div>'+
+      '<textarea id="cdi-msg" class="cd-textarea cd-textarea-sm" onblur="cdSave(\'agentMsg\',this.value)" placeholder="Current action item, what to expect this week...">'+(c.agentMsg||'')+'</textarea></div>'+
+    '<button class="btn btn-sage" style="width:100%;margin-top:6px;justify-content:center" onclick="cdSaveAll()">Save Changes</button>'+
   '</div>';
 }
 
@@ -905,12 +906,13 @@ function buildCDNotes(c){
   return '<div class="cd-card">'+
     '<div class="cd-card-hd">Agent Notes</div>'+
     '<div class="cd-card-hint">Never visible to client</div>'+
-    '<textarea class="cd-textarea" oninput="updateNotes(this.value)" placeholder="Notes for your records...">'+(c.agentNotes||'')+'</textarea>'+
+    '<textarea id="cdi-notes" class="cd-textarea" onblur="cdSave(\'agentNotes\',this.value)" placeholder="Notes for your records...">'+(c.agentNotes||'')+'</textarea>'+
   '</div>';
 }
 
 function cdSave(field,value){
   var c=getClient(_editingClientId);
+  if(!c)return;
   c[field]=value;
   if(field==='stage'&&value==='Long Term Follow Up'&&!c.ltfuStage)c.ltfuStage='7 Day Follow Up';
   if(field==='closing'&&value&&!(c.dates||[]).find(function(d){return d.label.toLowerCase().indexOf('closing')>=0;})){
@@ -918,10 +920,37 @@ function cdSave(field,value){
     c.dates.push({id:uid(),label:'Closing Day',date:value,status:'upcoming',desc:''});
   }
   upsertClient(c);
-  if(field==='closing'||field==='type'){
+  if(field==='closing'||field==='type'||field==='stage'){
     var c2=getClient(_editingClientId);
     document.getElementById('cd-left-panel').innerHTML=buildCDClientInfo(c2)+buildCDKeyDates(c2)+buildCDQuickActions(c2);
   }
+  cdFlashSaved();
+}
+
+function cdFlashSaved(){
+  var el=document.getElementById('cd-saved-badge');
+  if(!el)return;
+  el.style.opacity='1';
+  clearTimeout(el._t);
+  el._t=setTimeout(function(){el.style.opacity='0';},2000);
+}
+
+function cdSaveAll(){
+  var c=getClient(_editingClientId);
+  if(!c)return;
+  var n=document.getElementById('cdi-name');if(n)c.name=n.value;
+  var a=document.getElementById('cdi-address');if(a)c.address=a.value;
+  var ph=document.getElementById('cdi-phone');if(ph)c.phone=ph.value;
+  var em=document.getElementById('cdi-email');if(em)c.email=em.value;
+  var lp=document.getElementById('cdi-listprice');if(lp)c.listPrice=lp.value;
+  var cl=document.getElementById('cdi-closing');if(cl)c.closing=cl.value;
+  var mg=document.getElementById('cdi-msg');if(mg)c.agentMsg=mg.value;
+  var ty=document.getElementById('cdi-type');if(ty)c.type=ty.value;
+  var st=document.getElementById('cdi-stage');if(st){c.stage=st.value;if(c.stage==='Long Term Follow Up'&&!c.ltfuStage)c.ltfuStage='7 Day Follow Up';}
+  upsertClient(c);
+  var c2=getClient(_editingClientId);
+  document.getElementById('cd-left-panel').innerHTML=buildCDClientInfo(c2)+buildCDKeyDates(c2)+buildCDQuickActions(c2);
+  cdFlashSaved();
 }
 
 function cdDeleteDate(dateId,clientId,isExtra){
@@ -954,8 +983,8 @@ function cdAddDate(clientId){
 function cdRegenerateLink(){copyLinkFor(_editingClientId);}
 
 function updateStage(v){var c=getClient(_editingClientId);c.stage=v;if(v==='Long Term Follow Up'&&!c.ltfuStage)c.ltfuStage='7 Day Follow Up';upsertClient(c);}
-function updateNotes(v){var c=getClient(_editingClientId);c.agentNotes=v;upsertClient(c);}
-function updateMsg(v){var c=getClient(_editingClientId);c.agentMsg=v;upsertClient(c);}
+function updateNotes(v){var c=getClient(_editingClientId);if(!c)return;c.agentNotes=v;upsertClient(c);cdFlashSaved();}
+function updateMsg(v){var c=getClient(_editingClientId);if(!c)return;c.agentMsg=v;upsertClient(c);cdFlashSaved();}
 
 function backToDash(){
   _editingClientId=null;
@@ -1134,7 +1163,7 @@ function renderLTFU(){
       <div class="ltfu-col-hdr"><h3>${stage}</h3><span class="ltfu-cnt">${col.length}</span></div>
       ${col.map(c=>`<div class="ltfu-card" draggable="true" id="lcard-${c.id}" ondragstart="dragLTFU(event,'${c.id}')">
         <div class="lc-name">${c.name}</div>
-        <div class="lc-type">${c.type} · ${c.address.split(',')[0]}</div>
+        <div class="lc-type">${c.type} · ${(c.address||'').split(',')[0]}</div>
         ${c.ltfuNotes&&c.ltfuNotes.length?`<div class="lc-note" onclick="openLTFUNote('${c.id}')">${c.ltfuNotes[c.ltfuNotes.length-1].note}</div><div class="lc-date">Last: ${fmtDate(c.ltfuNotes[c.ltfuNotes.length-1].date||'')}</div>`:`<div class="lc-note-empty" onclick="openLTFUNote('${c.id}')">+ Add note</div>`}
       </div>`).join('')}
       <div class="ltfu-drop-zone">Drop here</div>
@@ -2654,7 +2683,7 @@ function renderDashboardFiltered() {
         <div class="pcol-hdr"><h3>${s}</h3><span class="pcol-count">${col.length}</span></div>
         ${col.map(c => `<div class="pcard${isLTFU ? ' ltfu-card' : ''}" onclick="openClientDetail('${c.id}')">
           <div class="pn">${c.name}</div>
-          <div class="pa">${c.address.split(',')[0]}</div>
+          <div class="pa">${(c.address||'').split(',')[0]}</div>
           <div style="margin-top:6px"><span class="badge ${c.type === 'buyer' ? 'b-buyer' : 'b-seller'}" style="font-size:10px">${c.type}</span></div>
         </div>`).join('')}
       </div>`;
@@ -4874,7 +4903,7 @@ window.renderDashboardFiltered = function() {
           ondragend="pipeDragEnd('${c.id}')"
           onclick="openClientDetail('${c.id}')">
           <div class="pn">${c.name}</div>
-          <div class="pa">${c.address.split(',')[0]}</div>
+          <div class="pa">${(c.address||'').split(',')[0]}</div>
           <div style="margin-top:6px;display:flex;gap:5px;align-items:center">
             <span class="badge ${c.type==='buyer'?'b-buyer':'b-seller'}" style="font-size:10px">${c.type}</span>
             ${c.closing ? `<span style="font-size:10px;color:var(--muted)">📅 ${fmtDate(c.closing).replace(/,\s*\d{4}$/,'')}</span>` : ''}
@@ -5361,7 +5390,7 @@ window.renderLTFU = function() {
           <div class="ltfu-card" draggable="true" id="lcard-${c.id}"
             ondragstart="dragLTFU(event,'${c.id}')">
             <div class="lc-name">${c.name}</div>
-            <div class="lc-type">${c.type} · ${c.address.split(',')[0]}</div>
+            <div class="lc-type">${c.type} · ${(c.address||'').split(',')[0]}</div>
             ${c.ltfuNotes && c.ltfuNotes.length
               ? `<div class="lc-note" onclick="openLTFUNote('${c.id}')">${c.ltfuNotes[c.ltfuNotes.length-1].note}</div>
                  <div class="lc-date">Last: ${fmtDate(c.ltfuNotes[c.ltfuNotes.length-1].date||'')}</div>`
