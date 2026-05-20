@@ -692,7 +692,7 @@ function route(){
       // Backwards compat: old links have full key 'name'; new compressed links use short key 'n'
       const cd=raw.name!==undefined?raw:{
         id:raw.i, name:raw.n, address:raw.a, type:raw.t, stage:raw.st||'',
-        dates:raw.d||[], closing:raw.cl||'', agentName:raw.an,
+        dates:(raw.d||[]).map(function(dt){return {label:dt.l,date:dt.d,status:dt.s};}), closing:raw.cl||'', agentName:raw.an,
         agentPhone:raw.ap, agentEmail:raw.ae,
         tcBuyer:raw.tc, tcSeller:raw.tc,
         agentMsg:raw.m||'', footer:raw.f||'', listPrice:raw.lp||''
@@ -6177,7 +6177,7 @@ window.generateLink = function(c) {
     a:  c.address,
     t:  c.type,
     st: c.stage || '',
-    d:  c.dates || [],
+    d:  (c.dates||[]).map(function(dt){return {l:dt.label,d:dt.date,s:dt.status};}),
     cl: c.closing || '',
     an: c.agentName || agent.name,
     ap: c.agentPhone || agent.phone,
