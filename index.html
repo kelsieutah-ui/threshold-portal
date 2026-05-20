@@ -2277,11 +2277,10 @@ function renderMasterTemplate() {
 
 function setMasterType(type, rerender=true) {
   _masterType = type;
-  // Update buyer/seller toggle button styles
-  document.getElementById('master-type-buyer').style.borderColor = type==='buyer' ? 'var(--sage)' : 'var(--border)';
-  document.getElementById('master-type-buyer').style.color = type==='buyer' ? 'var(--dark)' : 'var(--soft)';
-  document.getElementById('master-type-seller').style.borderColor = type==='seller' ? 'var(--sage)' : 'var(--border)';
-  document.getElementById('master-type-seller').style.color = type==='seller' ? 'var(--dark)' : 'var(--soft)';
+  const buyerBtn = document.getElementById('master-type-buyer');
+  const sellerBtn = document.getElementById('master-type-seller');
+  if (buyerBtn) { buyerBtn.style.borderColor = type==='buyer'?'var(--sage)':'var(--border)'; buyerBtn.style.color = type==='buyer'?'var(--dark)':'var(--soft)'; }
+  if (sellerBtn) { sellerBtn.style.borderColor = type==='seller'?'var(--sage)':'var(--border)'; sellerBtn.style.color = type==='seller'?'var(--dark)':'var(--soft)'; }
 
   const fakeClient = {
     id: MASTER_ID + type,
@@ -2298,96 +2297,72 @@ function setMasterType(type, rerender=true) {
     listPrice: ''
   };
 
+  // Buyer portal: no Checklists tab (matches actual client portal)
   const tabs = type==='buyer'
-    ? ['Welcome','Questionnaire','Checklists','Guides','Key Dates','Contact']
+    ? ['Welcome','Questionnaire','Guides','Key Dates','Contact']
     : ['Welcome','Questionnaire','Listing Info','Checklists','Net Calculators','Showing Prefs','Under Contract','Closing','Contact'];
 
   const wrap = document.getElementById('master-portal-wrap');
   if (!wrap) return;
-
-  // Build scrolling section card layout — same view clients see
-  const positions = ['30% 15%','60% 25%','20% 40%','70% 50%','45% 60%','25% 70%','65% 35%','50% 80%','35% 55%','75% 20%','15% 65%','55% 45%'];
-  const overlays = [
-    'linear-gradient(135deg,rgba(8,14,8,.76) 0%,rgba(8,14,8,.48) 100%)',
-    'linear-gradient(155deg,rgba(8,12,8,.8) 0%,rgba(8,14,8,.5) 100%)',
-    'linear-gradient(120deg,rgba(8,14,8,.74) 0%,rgba(8,14,8,.44) 100%)',
-    'linear-gradient(145deg,rgba(8,14,8,.78) 0%,rgba(8,14,8,.46) 100%)',
-    'linear-gradient(130deg,rgba(8,14,8,.76) 0%,rgba(8,14,8,.5) 100%)',
-    'linear-gradient(150deg,rgba(8,14,8,.82) 0%,rgba(8,14,8,.55) 100%)',
-    'linear-gradient(125deg,rgba(8,14,8,.75) 0%,rgba(8,14,8,.48) 100%)',
-    'linear-gradient(160deg,rgba(8,14,8,.8) 0%,rgba(8,14,8,.52) 100%)',
-  ];
 
   // Hero
   let inner = '<div style="padding:38px 22px 34px;text-align:center;background:var(--dark);position:relative;overflow:hidden">'
     + '<div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 80%,rgba(153,161,137,.13) 0%,transparent 60%);pointer-events:none"></div>'
     + '<div style="position:relative;z-index:1">'
     + '<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);font-weight:700;margin-bottom:10px" id="master-portal-label">'+(type==='buyer'?'Buyer':'Seller')+' Portal Preview</div>'
-    + '<div style="font-family:Playfair Display,serif;font-size:34px;color:var(--warm);font-weight:400;letter-spacing:.03em;margin-bottom:8px">Welcome, Your Client</div>'
+    + '<div style="font-family:\'Playfair Display\',serif;font-size:34px;color:var(--warm);font-weight:400;letter-spacing:.03em;margin-bottom:8px">Welcome, Your Client</div>'
     + '<div style="font-size:12px;color:rgba(248,240,226,.4)">1234 Example Lane, Lehi UT 84043</div>'
     + '</div></div>';
 
-  // Jump nav
-  inner += '<div style="background:rgba(20,32,20,.97);padding:9px 14px;border-bottom:1px solid rgba(153,161,137,.1)">'
-    + '<div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center">'
-    + tabs.map(function(t) {
-        return '<button style="padding:4px 11px;border-radius:20px;border:1px solid rgba(153,161,137,.15);background:transparent;'
-          + 'font-family:\'Jost\',sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;'
-          + 'color:rgba(248,240,226,.32);cursor:pointer;white-space:nowrap">'
-          + t + '</button>';
+  // Sticky tab nav — id="master-tab-nav" used by _mtOrigSetMasterType override
+  inner += '<div style="background:rgba(20,32,20,.97);padding:9px 14px;border-bottom:1px solid rgba(153,161,137,.1);position:sticky;top:0;z-index:10">'
+    + '<div id="master-tab-nav" style="display:flex;gap:6px;flex-wrap:wrap;overflow-x:auto">'
+    + tabs.map(function(t, i) {
+        const pid = 'mpt-' + t.toLowerCase().replace(/ /g,'-');
+        const act = i === 0;
+        return '<button style="padding:6px 14px;border-radius:20px;border:1.5px solid '+(act?'var(--sage)':'rgba(255,255,255,.22)')+';background:'+(act?'var(--sage)':'transparent')+';font-family:\'Jost\',sans-serif;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:'+(act?'#fff':'rgba(255,255,255,.72)')+';cursor:pointer;white-space:nowrap;transition:all .2s" onclick="switchMasterTab(this,\''+pid+'\')">'+t+'</button>';
       }).join('')
     + '</div></div>';
 
-  // Section cards
-  inner += '<div style="padding:10px 10px 40px;display:flex;flex-direction:column;gap:9px;max-width:680px;margin:0 auto">';
+  // Portal body — id="master-portal-body" targeted by Q-edit and tasks overrides
+  inner += '<div id="master-portal-body" style="background:var(--cream)">';
   tabs.forEach(function(t, i) {
-    const pos = positions[i % positions.length];
-    const ov  = overlays[i % overlays.length];
-    const num = (i+1).toString().padStart(2,'0');
-    const mid = 'mst-' + t.toLowerCase().replace(/ /g,'-');
-    let content;
-    try { content = buildCPTab(t, fakeClient, i); }
-    catch(e) { content = '<p style="color:var(--muted);padding:16px">Loading...</p>'; }
-
-    inner += '<div class="sec-card" id="'+mid+'">'
-      + '<div class="sc-face" style="background-position:'+pos+'" onclick="this.closest(\'.sec-card\').classList.toggle(\'open\')">'
-      + '<div class="sc-ov" style="background:'+ov+'"></div>'
-      + '<div class="sc-label"><span class="sc-num">'+num+'</span><div class="sc-title" id="mst-title-'+mid+'">'+t+'</div></div>'
-      + '<div class="sc-chev">&#8964;</div>'
-      + '</div>'
-      + '<div class="sc-body" id="mst-body-'+mid+'"><div class="sc-inner">'+content+'</div></div>'
-      + '</div>';
+    const pid = 'mpt-' + t.toLowerCase().replace(/ /g,'-');
+    let content = '';
+    try {
+      if (t === 'Questionnaire') content = buildQuestionnaire(fakeClient, type);
+      else if (t === 'Net Calculators') content = buildNetSheet(fakeClient);
+      else content = buildCPTab(t, fakeClient, i);
+    } catch(e) {}
+    inner += '<div id="'+pid+'" style="display:'+(i===0?'block':'none')+';padding:32px 24px 80px">'+content+'</div>';
   });
   inner += '</div>';
 
   wrap.innerHTML = inner;
 
-  // Open first card
-  const first = wrap.querySelector('.sec-card');
-  if (first) first.classList.add('open');
-
-  // Apply saved master edits and init checklists
   applyMasterEdits(type);
   initPortalChecklists(fakeClient);
-
-  // Re-apply edit mode if on
-  if (_masterEditOn) {
-    applyMasterEditableAttrs(true);
-  }
+  if (_masterEditOn) applyMasterEditableAttrs(true);
 }
 
 function switchMasterTab(btn, id) {
-  btn.parentElement.querySelectorAll('button').forEach(b => {
-    b.style.color = 'var(--muted)';
-    b.style.borderBottom = '2.5px solid transparent';
-  });
-  btn.style.color = 'var(--dark)';
-  btn.style.borderBottom = '2.5px solid var(--sage)';
-  document.getElementById('master-portal-body').querySelectorAll('[id^="mpt-"]').forEach(p => p.style.display = 'none');
+  const nav = document.getElementById('master-tab-nav');
+  if (nav) {
+    nav.querySelectorAll('button').forEach(function(b) {
+      b.style.background = 'transparent';
+      b.style.color = 'rgba(255,255,255,.72)';
+      b.style.borderColor = 'rgba(255,255,255,.22)';
+    });
+  }
+  btn.style.background = 'var(--sage)';
+  btn.style.color = '#fff';
+  btn.style.borderColor = 'var(--sage)';
+  const body = document.getElementById('master-portal-body');
+  if (body) body.querySelectorAll('[id^="mpt-"]').forEach(function(p) { p.style.display = 'none'; });
   const el = document.getElementById(id);
   if (el) el.style.display = 'block';
   applyMasterEdits(_masterType);
-  if (_masterEditOn) setTimeout(() => applyMasterEditableAttrs(true), 50);
+  if (_masterEditOn) setTimeout(function() { applyMasterEditableAttrs(true); }, 50);
 }
 
 function toggleMasterEdit() {
@@ -4820,19 +4795,16 @@ window.buildCPTab = function(tab, cd, idx) {
 let _pipeDragId = null;
 
 function pipeDragStart(e, clientId) {
-  console.log('[DnD] dragstart fired, clientId:', clientId);
   _pipeDragId = clientId;
   e.dataTransfer.setData('text/plain', clientId);
   e.dataTransfer.effectAllowed = 'move';
   setTimeout(() => {
     const el = document.getElementById('pcard-' + clientId);
     if (el) el.classList.add('dragging');
-    console.log('[DnD] pcard element found:', !!el);
   }, 0);
 }
 
 function pipeDragEnd(clientId) {
-  console.log('[DnD] dragend fired, clientId:', clientId);
   const el = document.getElementById('pcard-' + clientId);
   if (el) el.classList.remove('dragging');
   document.querySelectorAll('.pcol').forEach(c => c.classList.remove('drag-over-col'));
@@ -4851,21 +4823,17 @@ function pipeDragLeave(e, el) {
 }
 
 function pipeDrop(e, stage) {
-  console.log('[DnD] drop fired, stage:', stage);
   e.preventDefault();
   document.querySelectorAll('.pcol').forEach(c => c.classList.remove('drag-over-col'));
   const clientId = e.dataTransfer.getData('text/plain') || _pipeDragId;
-  console.log('[DnD] clientId from dataTransfer:', e.dataTransfer.getData('text/plain'), '| fallback _pipeDragId:', _pipeDragId);
-  if (!clientId) { console.log('[DnD] drop aborted: no clientId'); return; }
+  if (!clientId) return;
   const c = getClient(clientId);
-  console.log('[DnD] client found:', !!c, '| current stage:', c && c.stage, '| target stage:', stage);
-  if (!c || c.stage === stage) { console.log('[DnD] drop aborted: client null or same stage'); return; }
+  if (!c || c.stage === stage) return;
   c.stage = stage;
   if (stage === 'Long Term Follow Up' && !c.ltfuStage) c.ltfuStage = '7 Day Follow Up';
   upsertClient(c);
   renderDashboard();
   showToast(c.name + ' moved to ' + stage);
-  console.log('[DnD] drop complete, moved', c.name, 'to', stage);
 }
 
 /* Override renderDashboardFiltered to inject inline DnD handlers on every pcard and pcol */
@@ -4874,8 +4842,7 @@ window.renderDashboardFiltered = function() {
   _dndBaseRender();
 
   const board = document.getElementById('pipeline-board');
-  console.log('[DnD] renderDashboardFiltered override: board found:', !!board, '| board.style.display:', JSON.stringify(board && board.style.display));
-  if (!board || board.style.display === 'none') { console.log('[DnD] board rebuild SKIPPED by guard'); return; }
+  if (!board || board.style.display === 'none') return;
 
   const all = loadClients();
   let clients = Object.values(all);
@@ -4916,9 +4883,6 @@ window.renderDashboardFiltered = function() {
       </div>
     </div>`;
   }).join('');
-  const draggableCards = board.querySelectorAll('[draggable="true"]');
-  const colsWithDrop = board.querySelectorAll('[ondrop]');
-  console.log('[DnD] board rebuilt: draggable cards:', draggableCards.length, '| columns with ondrop:', colsWithDrop.length);
 };
 
 // Re-render pipeline immediately if it's already visible
@@ -8282,8 +8246,6 @@ window.showClientPortal = function(cd) {
     else content = buildCPTab(t, cd, i);
     return `<div class="portal-panel${i===0?' active':''}" id="${id}">${content}</div>`;
   }).join('');
-  console.log('panels built:', document.querySelectorAll('.portal-panel').length, document.querySelector('.portal-panel.active')?.innerHTML?.length);
-
   renderPortalDates(cd);
   initPortalChecklists(cd);
   setTimeout(() => {
