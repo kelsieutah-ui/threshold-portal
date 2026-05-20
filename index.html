@@ -687,7 +687,18 @@ function route(){
   let enc=p.get('data');
   if(enc){
     enc=enc.replace(/ /g,'+'); // URLSearchParams decodes + as space; restore it
-    try{const cd=JSON.parse(atob(decodeURIComponent(enc)));window._cd=cd;showClientPortal(cd);}
+    try{
+      const raw=JSON.parse(atob(decodeURIComponent(enc)));
+      // Backwards compat: old links have full key 'name'; new compressed links use short key 'n'
+      const cd=raw.name!==undefined?raw:{
+        id:raw.i, name:raw.n, address:raw.a, type:raw.t, stage:raw.st||'',
+        dates:raw.d||[], closing:raw.cl||'', agentName:raw.an,
+        agentPhone:raw.ap, agentEmail:raw.ae,
+        tcBuyer:raw.tc, tcSeller:raw.tc,
+        agentMsg:raw.m||'', footer:raw.f||'', listPrice:raw.lp||''
+      };
+      window._cd=cd; showClientPortal(cd);
+    }
     catch(e){console.log('Portal parse error:',e);showAgent();}
   }else{showAgent();}
 }
@@ -6156,27 +6167,27 @@ window.showClientPortal = function(cd) {
   _sbShowClientPortal(cd);
 };
 
-/* Patch generateLink to include agent name and footer */
+/* Patch generateLink — minimal short-key payload to keep URLs short */
 const _sbGenerateLink = window.generateLink;
 window.generateLink = function(c) {
   const agent = getAgent();
-  const payload = {
-    id: c.id,
-    name: c.name,
-    address: c.address,
-    type: c.type,
-    dates: c.dates || [],
-    closing: c.closing || '',
-    agentPhone: c.agentPhone || agent.phone,
-    agentEmail: c.agentEmail || agent.email,
-    tcBuyer: c.tcBuyer || agent.tcBuyer,
-    tcSeller: c.tcSeller || agent.tcSeller,
-    agentMsg: c.agentMsg || '',
-    agentName: agent.name,
-    footer: agent.footer,
-    listPrice: c.listPrice || ''
+  const minimal = {
+    i:  c.id,
+    n:  c.name,
+    a:  c.address,
+    t:  c.type,
+    st: c.stage || '',
+    d:  c.dates || [],
+    cl: c.closing || '',
+    an: c.agentName || agent.name,
+    ap: c.agentPhone || agent.phone,
+    ae: c.agentEmail || agent.email,
+    tc: c.type === 'buyer' ? (c.tcBuyer || agent.tcBuyer) : (c.tcSeller || agent.tcSeller),
+    m:  c.agentMsg || '',
+    f:  agent.footer || '',
+    lp: c.listPrice || ''
   };
-  const enc = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const enc = btoa(unescape(encodeURIComponent(JSON.stringify(minimal))));
   const base = 'https://portal.kelsiejimenez.com/';
   return base + '?data=' + encodeURIComponent(enc);
 };
