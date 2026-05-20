@@ -6185,9 +6185,8 @@ window.generateLink = function(c) {
 ══════════════════════════════════════════════ */
 window.sendKelsieNote = function(agentPhone, clientName) {
   const phone = (agentPhone || '').replace(/\D/g,'');
-  const msg = encodeURIComponent('Hi Kelsie, this is ' + (clientName||'your client') + '. I had a question: ');
   if (phone) {
-    window.location.href = 'sms:' + phone + '&body=' + msg;
+    window.location.href = 'sms:' + phone;
   } else {
     showToast('Phone number not set — update in client settings');
   }
@@ -6200,7 +6199,7 @@ window.buildWelcome = function(cd) {
   // Replace the non-functional send button with a working SMS link
   return base.replace(
     /<button class="btn btn-sage btn-sm">Send Message<\/button>/g,
-    `<a href="sms:${cd.agentPhone||''}${cd.agentPhone?'&body='+encodeURIComponent('Hi Kelsie! '):''}">
+    `<a href="sms:${cd.agentPhone||''}">
       <button class="btn btn-sage btn-sm" type="button">📱 Text Kelsie</button>
     </a>`
   );
