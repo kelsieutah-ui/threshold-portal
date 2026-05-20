@@ -2593,30 +2593,43 @@ function duplicateClient(e, id) {
    CONTACT TAB — text-first, no form
 ══════════════════════════════════════════════ */
 window.buildContact = function(cd) {
+  const isBuyer = cd.type === 'buyer';
   return `
   <div class="sec-hd"><div class="eyebrow">Your Team</div><h2>Contact</h2><p data-editable="contact_intro" data-ck="${cd.id||'local'}" contenteditable="false">Questions? The fastest way to reach us is always a text or call. We're here.</p></div>
-  <div class="contact-grid">
-    <div class="contact-card primary">
-      <div class="ccr">Your Agent</div>
-      <div class="ccn">Kelsie Jimenez</div>
-      <div class="ccd">📞 <a href="tel:${cd.agentPhone||''}">${cd.agentPhone||'—'}</a></div>
-      <div class="ccd">✉️ <a href="mailto:${cd.agentEmail||''}">${cd.agentEmail||'—'}</a></div>
-      <div class="ccd">💬 <a href="sms:${cd.agentPhone||''}">Text Kelsie directly</a></div>
-      <div class="ccd">🏢 Real Broker LLC · Utah County</div>
-    </div>
-    ${cd.type !== 'buyer' ? `<div class="contact-card">
-      <div class="ccr">Transaction Coordinator — Seller Side</div>
-      <div class="ccn">${cd.tcSeller||'Kim'}</div>
-      <div class="ccd">📋 Manages your paperwork &amp; deadlines</div>
-      <div class="ccd">✉️ You'll receive emails directly from them</div>
-      <div class="ccd" style="font-size:12px;color:var(--muted);line-height:1.5;padding-top:10px">Your TC handles day-to-day transaction questions. For anything else — questions, concerns, updates — text Kelsie.</div>
-    </div>` : ''}
-  </div>
-  <div class="card" style="margin-top:14px;text-align:center;padding:28px 24px">
+  ${isBuyer
+    ? `<div style="max-width:600px;margin:0 auto">
+        <div class="contact-card primary">
+          <div class="ccr">Your Agent</div>
+          <div class="ccn">Kelsie Jimenez</div>
+          <div class="ccd">📞 <a href="tel:8014202284">(801) 420-2284</a></div>
+          <div class="ccd">✉️ <a href="mailto:kelsie.jimenez@theperry.group">kelsie.jimenez@theperry.group</a></div>
+          <div class="ccd">💬 <a href="sms:8014202284">Text Kelsie directly</a></div>
+          <div class="ccd">🏢 Real Broker LLC · Utah County</div>
+        </div>
+      </div>`
+    : `<div class="contact-grid">
+        <div class="contact-card primary">
+          <div class="ccr">Your Agent</div>
+          <div class="ccn">Kelsie Jimenez</div>
+          <div class="ccd">📞 <a href="tel:${cd.agentPhone||''}">${cd.agentPhone||'—'}</a></div>
+          <div class="ccd">✉️ <a href="mailto:${cd.agentEmail||''}">${cd.agentEmail||'—'}</a></div>
+          <div class="ccd">💬 <a href="sms:${cd.agentPhone||''}">Text Kelsie directly</a></div>
+          <div class="ccd">🏢 Real Broker LLC · Utah County</div>
+        </div>
+        <div class="contact-card">
+          <div class="ccr">Transaction Coordinator — Seller Side</div>
+          <div class="ccn">${cd.tcSeller||'Kim'}</div>
+          <div class="ccd">📋 Manages your paperwork &amp; deadlines</div>
+          <div class="ccd">✉️ You'll receive emails directly from them</div>
+          <div class="ccd" style="font-size:12px;color:var(--muted);line-height:1.5;padding-top:10px">Your TC handles day-to-day transaction questions. For anything else — questions, concerns, updates — text Kelsie.</div>
+        </div>
+      </div>`
+  }
+  <div class="card" style="max-width:600px;margin:14px auto 0;text-align:center;padding:28px 24px">
     <div style="font-size:28px;margin-bottom:8px">💬</div>
     <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--dark);margin-bottom:6px">Have a question?</div>
     <p style="font-size:14px;color:var(--soft);max-width:360px;margin:0 auto 16px" data-editable="contact_cta" data-ck="${cd.id||'local'}" contenteditable="false">The fastest way to reach me is always a direct text. I typically respond within a few hours during business days.</p>
-    <a href="sms:${cd.agentPhone||''}" class="btn btn-dark" style="text-decoration:none;display:inline-flex">📱 Text Kelsie</a>
+    <a href="sms:8014202284" class="btn btn-dark" style="text-decoration:none;display:inline-flex">📱 Text Kelsie</a>
   </div>`;
 };
 </script>
@@ -7705,6 +7718,7 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
 .rm-phase-dot { width: 22px; flex-shrink: 0; display: flex; justify-content: center; position: relative; z-index: 2; }
 .rm-phase-dot::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--sage); opacity: .5; display: block; }
 .rm-phase-label { font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sage); padding-left: 12px; }
+.rm-cal-tip { position: fixed; z-index: 9999; background: var(--dark); color: #fff; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .2px; padding: 5px 11px; border-radius: 6px; white-space: nowrap; pointer-events: none; transform: translateX(-50%); box-shadow: 0 3px 14px rgba(0,0,0,.28); }
 </style>
 
 <script>
@@ -8347,14 +8361,36 @@ function rmRenderCalendar(cid) {
     let cls = 'rm-cal-cell';
     if (hasDate) cls += ' rm-has-date';
     else if (isToday) cls += ' rm-today';
-    html += '<div class="' + cls + '">' +
+    const tipAttr = hasDate ? ' data-rm-tip="' + label.replace(/"/g, '&quot;') + '" onclick="rmCalTooltip(event,this)"' : '';
+    html += '<div class="' + cls + '"' + tipAttr + '>' +
       '<span>' + d + '</span>' +
-      (hasDate ? '<div class="rm-date-label">' + label + '</div>' : '') +
       '</div>';
   }
 
   const gridEl = document.getElementById('rm-cal-grid-' + cid);
   if (gridEl) gridEl.innerHTML = html;
+}
+
+function rmCalTooltip(e, el) {
+  e.stopPropagation();
+  const existing = document.getElementById('rm-cal-tip-el');
+  if (existing) existing.remove();
+  const label = el.dataset.rmTip;
+  if (!label) return;
+  const tip = document.createElement('div');
+  tip.id = 'rm-cal-tip-el';
+  tip.className = 'rm-cal-tip';
+  tip.textContent = label;
+  document.body.appendChild(tip);
+  const rect = el.getBoundingClientRect();
+  tip.style.left = (rect.left + rect.width / 2) + 'px';
+  tip.style.top  = (rect.top - tip.offsetHeight - 8) + 'px';
+  function dismiss() {
+    const t = document.getElementById('rm-cal-tip-el');
+    if (t) t.remove();
+    document.removeEventListener('click', dismiss);
+  }
+  setTimeout(function() { document.addEventListener('click', dismiss); }, 0);
 }
 
 function rmCalNav(cid, dir) {
