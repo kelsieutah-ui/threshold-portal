@@ -4823,17 +4823,19 @@ window.buildCPTab = function(tab, cd, idx) {
 let _pipeDragId = null;
 
 function pipeDragStart(e, clientId) {
+  console.log('[DnD] dragstart fired, clientId:', clientId);
   _pipeDragId = clientId;
   e.dataTransfer.setData('text/plain', clientId);
   e.dataTransfer.effectAllowed = 'move';
-  // Add dragging class after a tick so it renders before ghosting
   setTimeout(() => {
     const el = document.getElementById('pcard-' + clientId);
     if (el) el.classList.add('dragging');
+    console.log('[DnD] pcard element found:', !!el);
   }, 0);
 }
 
 function pipeDragEnd(clientId) {
+  console.log('[DnD] dragend fired, clientId:', clientId);
   const el = document.getElementById('pcard-' + clientId);
   if (el) el.classList.remove('dragging');
   document.querySelectorAll('.pcol').forEach(c => c.classList.remove('drag-over-col'));
@@ -4846,35 +4848,37 @@ function pipeDragOver(e, el) {
 }
 
 function pipeDragLeave(e, el) {
-  // Only remove if leaving the column entirely, not just entering a child
   if (!el.contains(e.relatedTarget)) {
     el.classList.remove('drag-over-col');
   }
 }
 
 function pipeDrop(e, stage) {
+  console.log('[DnD] drop fired, stage:', stage);
   e.preventDefault();
   document.querySelectorAll('.pcol').forEach(c => c.classList.remove('drag-over-col'));
   const clientId = e.dataTransfer.getData('text/plain') || _pipeDragId;
-  if (!clientId) return;
+  console.log('[DnD] clientId from dataTransfer:', e.dataTransfer.getData('text/plain'), '| fallback _pipeDragId:', _pipeDragId);
+  if (!clientId) { console.log('[DnD] drop aborted: no clientId'); return; }
   const c = getClient(clientId);
-  if (!c || c.stage === stage) return;
+  console.log('[DnD] client found:', !!c, '| current stage:', c && c.stage, '| target stage:', stage);
+  if (!c || c.stage === stage) { console.log('[DnD] drop aborted: client null or same stage'); return; }
   c.stage = stage;
   if (stage === 'Long Term Follow Up' && !c.ltfuStage) c.ltfuStage = '7 Day Follow Up';
   upsertClient(c);
   renderDashboard();
   showToast(c.name + ' moved to ' + stage);
+  console.log('[DnD] drop complete, moved', c.name, 'to', stage);
 }
 
 /* Override renderDashboardFiltered to inject inline DnD handlers on every pcard and pcol */
 const _dndBaseRender = window.renderDashboardFiltered;
 window.renderDashboardFiltered = function() {
-  // Run the existing render first
   _dndBaseRender();
 
-  // Now rebuild JUST the pipeline board with proper inline DnD attributes
   const board = document.getElementById('pipeline-board');
-  if (!board || board.style.display === 'none') return;
+  console.log('[DnD] renderDashboardFiltered override: board found:', !!board, '| board.style.display:', JSON.stringify(board && board.style.display));
+  if (!board || board.style.display === 'none') { console.log('[DnD] board rebuild SKIPPED by guard'); return; }
 
   const all = loadClients();
   let clients = Object.values(all);
@@ -4915,6 +4919,9 @@ window.renderDashboardFiltered = function() {
       </div>
     </div>`;
   }).join('');
+  const draggableCards = board.querySelectorAll('[draggable="true"]');
+  const colsWithDrop = board.querySelectorAll('[ondrop]');
+  console.log('[DnD] board rebuilt: draggable cards:', draggableCards.length, '| columns with ondrop:', colsWithDrop.length);
 };
 
 // Re-render pipeline immediately if it's already visible
@@ -6211,6 +6218,7 @@ function exportCSV() {
 ══════════════════════════════════════════════ */
 const _sbRenderDash = window.renderDashboard;
 window.renderDashboard = function() {
+  const agent = getAgent();
   const all = loadClients();
   const clients = Object.values(all);
   const now = new Date();
