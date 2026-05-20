@@ -7666,6 +7666,45 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
   .cp-h1 { font-size: 36px; }
   .cp-hero { padding: 0 0 32px 20px; }
 }
+
+/* ── ROADMAP TIMELINE REDESIGN ── */
+.rm-cal-wrap { background: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; padding: 4px 0 20px !important; margin-bottom: 4px !important; }
+
+.rm-steps { display: flex; flex-direction: column; gap: 0; position: relative; }
+.rm-steps::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px; width: 2px; background: var(--sage); opacity: .18; border-radius: 2px; }
+
+.rm-step { overflow: visible !important; max-height: none !important; background: none !important; border: none !important; border-left: none !important; border-radius: 0 !important; box-shadow: none !important; transition: none !important; cursor: pointer; display: flex !important; align-items: flex-start; position: relative; padding: 0 !important; }
+.rm-step.done { max-height: none !important; background: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
+.rm-step:not(.done):hover, .rm-step.done:hover { box-shadow: none !important; }
+.rm-step-bar, .rm-step-expand, .rm-step-chevron { display: none !important; }
+
+.rm-tl-dot-col { flex-shrink: 0; width: 22px; display: flex; justify-content: center; position: relative; z-index: 1; padding-top: 11px; }
+.rm-tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sage); opacity: .2; flex-shrink: 0; transition: opacity .2s, box-shadow .2s; }
+.rm-step.done .rm-tl-dot { opacity: 1; }
+.rm-step.rm-active .rm-tl-dot { opacity: 1; animation: rmDotPulse 2s infinite; }
+@keyframes rmDotPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(74,107,74,.45); }
+  70%  { box-shadow: 0 0 0 8px rgba(74,107,74,0); }
+  100% { box-shadow: 0 0 0 0 rgba(74,107,74,0); }
+}
+
+.rm-tl-content { flex: 1; min-width: 0; padding: 7px 4px 16px 12px; }
+.rm-step.done .rm-tl-content { padding-bottom: 10px; }
+.rm-tl-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rm-tl-num { font-family: 'Jost', sans-serif; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); font-weight: 700; margin-bottom: 2px; opacity: .65; }
+.rm-tl-title { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--dark); font-weight: 400; line-height: 1.25; }
+.rm-step.done .rm-tl-num { opacity: .35; }
+.rm-step.done .rm-tl-title { color: var(--soft); text-decoration: line-through; opacity: .55; }
+.rm-tl-desc { font-family: 'Jost', sans-serif; font-size: 12.5px; color: var(--soft); line-height: 1.55; margin-top: 5px; }
+.rm-tl-icon { font-size: 16px; color: var(--soft); flex-shrink: 0; opacity: .35; transition: color .18s, opacity .18s; margin-top: 1px; }
+.rm-step.done .rm-tl-icon { color: var(--sage); opacity: 1; font-size: 13px; }
+.rm-step:hover .rm-tl-icon { color: var(--sage); opacity: 1; }
+
+.rm-phase-divider { display: flex; align-items: center; padding: 14px 0 8px; position: relative; }
+.rm-phase-line { display: none !important; }
+.rm-phase-dot { width: 22px; flex-shrink: 0; display: flex; justify-content: center; position: relative; z-index: 2; }
+.rm-phase-dot::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--sage); opacity: .5; display: block; }
+.rm-phase-label { font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sage); padding-left: 12px; }
 </style>
 
 <script>
@@ -8338,8 +8377,7 @@ function rmUpdateProgress(cid) {
 }
 
 function rmHandleCardClick(e, cid, num) {
-  if (e.currentTarget.classList.contains('done')) rmToggleStep(cid, num);
-  else rmOpenDetail(cid, num);
+  rmOpenDetail(cid, num);
 }
 
 function rmToggleStep(cid, stepNum) {
@@ -8613,25 +8651,35 @@ function rmInit(cid, dates) {
   const stepsEl = document.getElementById('rm-steps-' + cid);
   if (!stepsEl) return;
 
+  var activeNum = null;
+  for (var i = 0; i < steps.length; i++) {
+    if (!steps[i].divider && !state['step_' + steps[i].num]) {
+      activeNum = steps[i].num;
+      break;
+    }
+  }
+
   stepsEl.innerHTML = steps.map(function(s) {
     if (s.divider) {
       return '<div class="rm-phase-divider">' +
-        '<div class="rm-phase-line"></div>' +
+        '<div class="rm-phase-dot"></div>' +
         '<div class="rm-phase-label">' + s.label + '</div>' +
-        '<div class="rm-phase-line"></div>' +
-        '</div>';
+      '</div>';
     }
-    const done = !!state['step_' + s.num];
-    return '<div class="rm-step' + (done ? ' done' : '') + '" data-rm-step="' + cid + '-' + s.num + '" onclick="rmHandleCardClick(event,\'' + cid + '\',\'' + s.num + '\')">' +
-      '<div class="rm-step-bar">' +
-        '<div class="rm-step-bar-left">' +
-          '<div class="rm-step-num">' + s.num + '</div>' +
-          '<div class="rm-step-title">' + s.title + '</div>' +
+    const done   = !!state['step_' + s.num];
+    const active = !done && s.num === activeNum;
+    const cls    = 'rm-step' + (done ? ' done' : (active ? ' rm-active' : ''));
+    return '<div class="' + cls + '" data-rm-step="' + cid + '-' + s.num + '" onclick="rmHandleCardClick(event,\'' + cid + '\',\'' + s.num + '\')">' +
+      '<div class="rm-tl-dot-col"><div class="rm-tl-dot"></div></div>' +
+      '<div class="rm-tl-content">' +
+        '<div class="rm-tl-row">' +
+          '<div>' +
+            '<div class="rm-tl-num">' + s.num + '</div>' +
+            '<div class="rm-tl-title">' + s.title + '</div>' +
+          '</div>' +
+          '<div class="rm-tl-icon">' + (done ? '&#10003;' : '&#8250;') + '</div>' +
         '</div>' +
-        '<div class="rm-step-chevron">&#8250;</div>' +
-      '</div>' +
-      '<div class="rm-step-expand">' +
-        '<div class="rm-step-desc">' + s.desc + '</div>' +
+        (active ? '<div class="rm-tl-desc">' + s.desc + '</div>' : '') +
       '</div>' +
     '</div>';
   }).join('');
