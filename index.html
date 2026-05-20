@@ -682,11 +682,13 @@ function seedDemo(){
    ROUTER
 ══════════════════════════════════════════════ */
 function route(){
+  console.log('URL:', window.location.href, 'search:', window.location.search);
   const p=new URLSearchParams(window.location.search);
-  const enc=p.get('data');
+  let enc=p.get('data');
   if(enc){
+    enc=enc.replace(/ /g,'+'); // URLSearchParams decodes + as space; restore it
     try{const cd=JSON.parse(atob(decodeURIComponent(enc)));window._cd=cd;showClientPortal(cd);}
-    catch{showAgent();}
+    catch(e){console.log('Portal parse error:',e);showAgent();}
   }else{showAgent();}
 }
 
@@ -1198,7 +1200,7 @@ function generateLink(c){
   const payload={id:c.id,name:c.name,address:c.address,type:c.type,dates:c.dates||[],closing:c.closing||'',agentPhone:c.agentPhone||'',agentEmail:c.agentEmail||'',tcBuyer:c.tcBuyer||'Hannah',tcSeller:c.tcSeller||'Kim',agentMsg:c.agentMsg||''};
   const enc=btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
   const base = 'https://portal.kelsiejimenez.com/';
-  return base + '?data=' + enc;
+  return base + '?data=' + encodeURIComponent(enc);
 }
 function copyLinkFor(id){
   const c=getClient(id);if(!c)return;
@@ -6176,7 +6178,7 @@ window.generateLink = function(c) {
   };
   const enc = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
   const base = 'https://portal.kelsiejimenez.com/';
-  return base + '?data=' + enc;
+  return base + '?data=' + encodeURIComponent(enc);
 };
 
 /* ══════════════════════════════════════════════
