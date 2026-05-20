@@ -8037,7 +8037,7 @@ window.showClientPortal = function(cd) {
   document.getElementById('cp-addr').textContent = (cd.address || '').replace(/[—–·•]/g, ' - ').split(',').map(p => p.trim()).filter(Boolean).join(' - ');
 
   const tabs = isBuyer
-    ? ['Welcome','Questionnaire','Checklists','Guides','Key Dates','Contact']
+    ? ['Welcome','Questionnaire','Guides','Key Dates','Contact']
     : ['Welcome','Questionnaire','Listing Info','Checklists','Net Calculators','Showing Prefs','Under Contract','Closing','Contact'];
 
   document.getElementById('cp-nav').innerHTML = tabs.map((t,i) =>
@@ -8481,8 +8481,8 @@ function rmDetailContent(cid, num) {
       body: '<p>This is your opportunity to dig in — research, inspect, and feel confident about your investment before you’re fully committed.</p>' +
         '<h4>Recommended Inspectors</h4>' +
         '<ul>' +
-          '<li><strong>Andy Torgerson</strong> — 360 Home Check — (801) 735-4642</li>' +
-          '<li><strong>A1 Utah Home Inspectors</strong> — (435) 757-3363</li>' +
+          '<li><strong>Andy Torgerson</strong> — <a href="tel:8017354642" style="color:var(--sage)">360 Home Check — (801) 735-4642</a></li>' +
+          '<li><strong>A1 Utah Home Inspectors</strong> — <a href="tel:4357573363" style="color:var(--sage)">(435) 757-3363</a></li>' +
         '</ul>' +
         '<p>General Inspection covers structural, mechanical, and overall property condition. Optional add-ons:</p>' +
         '<ul>' +
@@ -8495,7 +8495,15 @@ function rmDetailContent(cid, num) {
         '<h4>Title &amp; Property Documents</h4>' +
         '<p>Your title company will send a title report showing the plat map, ownership on record, and any liens or easements. Review carefully along with any HOA documents.</p>' +
         '<h4>Other Things Worth Researching</h4>' +
-        '<p>City zoning, crime maps, sex offender registry, FEMA flood maps, HOA rules and fees, property tax history, school district ratings, environmental hazards, local ordinances, insurance risks.</p>',
+        '<ul>' +
+          '<li><a href="https://www.utah.gov/government/localgovt.html" target="_blank" rel="noopener" style="color:var(--sage)">City Planning / Zoning</a></li>' +
+          '<li><a href="https://www.crimemapping.com" target="_blank" rel="noopener" style="color:var(--sage)">Crime &amp; Safety Maps</a></li>' +
+          '<li><a href="https://sor.utah.gov" target="_blank" rel="noopener" style="color:var(--sage)">Sex Offender Registry</a></li>' +
+          '<li><a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener" style="color:var(--sage)">FEMA Flood Maps</a></li>' +
+          '<li><a href="https://www.utahcounty.gov/dept/assessor/" target="_blank" rel="noopener" style="color:var(--sage)">Property Tax History</a></li>' +
+          '<li><a href="https://www.niche.com/k-12/search/best-school-districts/s/utah/" target="_blank" rel="noopener" style="color:var(--sage)">School District Ratings</a></li>' +
+          '<li><a href="https://air.utah.gov" target="_blank" rel="noopener" style="color:var(--sage)">Air Quality</a></li>' +
+        '</ul>',
       actions: ''
     };
 
@@ -8518,7 +8526,7 @@ function rmDetailContent(cid, num) {
 
     case '11': return {
       title: 'The Appraisal — What to Expect',
-      body: '<p>Your lender will order the appraisal once you’re under contract. An appraiser will visit the home and determine its market value based on comparable sales in the area.</p>' +
+      body: ‘<p>Your lender will coordinate with you to order the appraisal. An appraiser will visit the home and determine its market value based on comparable sales in the area.</p>’ +
         '<p>You don’t need to be there. The seller or listing agent will coordinate access.</p>' +
         '<h4>Two Possible Outcomes</h4>' +
         '<ul>' +
