@@ -7826,33 +7826,35 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
 .cd-client-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--cream); flex: 1; text-align: center; }
 .cd-new-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 18px; max-width: 1100px; margin: 0 auto; }
 .cd-col-left, .cd-col-right { display: flex; flex-direction: column; gap: 14px; }
-.cd-card { background: rgba(248,240,226,.04); border: 1px solid rgba(153,161,137,.13); border-radius: 10px; padding: 18px 20px; }
-.cd-card-hd { font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); margin-bottom: 14px; }
-.cd-card-hint { font-size: 11px; color: rgba(248,240,226,.35); margin-bottom: 14px; margin-top: -10px; }
-.cd-lbl { display: block; font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(248,240,226,.45); margin-bottom: 4px; }
-.cd-lbl-hint { font-size: 9px; letter-spacing: .5px; color: rgba(248,240,226,.28); text-transform: none; font-weight: 400; }
-.cd-field { margin-bottom: 12px; }
+.cd-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+.cd-card-hd { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 16px; letter-spacing: 0; text-transform: none; }
+.cd-card-hint { font-size: 11px; color: var(--muted); margin-bottom: 14px; margin-top: -10px; }
+.cd-lbl { display: block; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--dark); margin-bottom: 4px; }
+.cd-lbl-hint { font-size: 10px; letter-spacing: .3px; color: var(--muted); text-transform: none; font-weight: 400; }
+.cd-field { margin-bottom: 14px; }
 .cd-field:last-child { margin-bottom: 0; }
 .cd-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.cd-input { width: 100%; background: rgba(248,240,226,.06); border: 1px solid rgba(153,161,137,.18); border-radius: 6px; padding: 8px 10px; font-family: 'Jost', sans-serif; font-size: 13px; color: var(--cream); box-sizing: border-box; outline: none; transition: border-color .15s; }
-.cd-input:focus { border-color: rgba(153,161,137,.45); }
-.cd-textarea { width: 100%; background: rgba(248,240,226,.06); border: 1px solid rgba(153,161,137,.18); border-radius: 6px; padding: 8px 10px; font-family: 'Jost', sans-serif; font-size: 13px; color: var(--cream); box-sizing: border-box; outline: none; resize: vertical; min-height: 80px; transition: border-color .15s; }
-.cd-textarea:focus { border-color: rgba(153,161,137,.45); }
+.cd-input { width: 100%; background: #fff; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: 'Jost', sans-serif; font-size: 14px; color: var(--dark); box-sizing: border-box; outline: none; transition: border-color .15s; }
+.cd-input:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(153,161,137,.12); }
+.cd-input::placeholder { color: #999; }
+.cd-textarea { width: 100%; background: #fff; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: 'Jost', sans-serif; font-size: 14px; color: var(--dark); box-sizing: border-box; outline: none; resize: vertical; min-height: 80px; transition: border-color .15s; }
+.cd-textarea:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(153,161,137,.12); }
+.cd-textarea::placeholder { color: #999; }
 .cd-textarea-sm { min-height: 56px; }
 .cd-dates-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 .cd-date-row { display: flex; align-items: center; gap: 8px; }
 .cd-date-info { flex: 1; min-width: 0; }
-.cd-date-label { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; color: var(--cream); }
-.cd-del-btn { background: none; border: none; color: rgba(248,240,226,.3); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: color .15s; flex-shrink: 0; }
+.cd-date-label { font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: var(--dark); }
+.cd-del-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: color .15s; flex-shrink: 0; }
 .cd-del-btn:hover { color: #c97878; }
-.cd-date-add { margin-top: 10px; border-top: 1px solid rgba(153,161,137,.1); padding-top: 10px; }
+.cd-date-add { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
 .cd-input-flex { display: flex; gap: 6px; flex-wrap: wrap; }
 .cd-input-date { flex: 1; min-width: 110px; }
 .cd-input-status { flex: 1; min-width: 90px; }
-.cd-empty { font-family: 'Jost', sans-serif; font-size: 12px; color: rgba(248,240,226,.28); padding: 4px 0 10px; }
+.cd-empty { font-family: 'Jost', sans-serif; font-size: 13px; color: var(--muted); padding: 4px 0 10px; }
 .cd-quick-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.btn-outline-sage { background: transparent; border: 1px solid rgba(153,161,137,.35); color: var(--sage); font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; padding: 7px 14px; border-radius: 20px; cursor: pointer; transition: background .15s, border-color .15s; }
-.btn-outline-sage:hover { background: rgba(153,161,137,.12); border-color: rgba(153,161,137,.55); }
+.btn-outline-sage { background: transparent; border: 1.5px solid var(--sage); color: var(--dark-mid); font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: background .15s, border-color .15s; }
+.btn-outline-sage:hover { background: rgba(153,161,137,.12); }
 #cd-tasks-card .tasks-wrap { max-width: none; margin: 0; padding: 0; background: none; border: none; box-shadow: none; }
 @media (max-width: 760px) { .cd-new-layout { grid-template-columns: 1fr; padding: 12px; } }
 </style>
