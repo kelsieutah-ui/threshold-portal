@@ -415,7 +415,16 @@ body.editing .add-cl-item-btn{display:block}
   .agent-header{padding:0 14px}
   .agent-nav{padding:0 14px}
 }
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 </head>
 <body>
 
@@ -627,24 +636,24 @@ const BUYER_TASKS = {
 };
 
 const DEFAULT_TEMPLATES = [
-  {id:'t1',cat:'buyer',name:'Buyer Questionnaire',subject:'Before we meet — a quick questionnaire',body:`Hi [Client Name],\n\nI'm so glad we're connecting! To make sure our time together is as valuable as possible, I'd love to have you fill out a short questionnaire before we meet.\n\n[LINK TO QUESTIONNAIRE]\n\nThis helps me understand your priorities, timeline, and what's most important to you in a home.\n\nLooking forward to it!\n\nKelsie\nThe Perry Group | Real Broker LLC`},
-  {id:'t2',cat:'buyer',name:'Congrats Earnest Money',subject:"We're under contract! 🎉 Here's what's next",body:`[Client Name],\n\nWe're officially under contract on [Address]! This is such an exciting milestone.\n\nA few things to take care of right away:\n\n📌 EARNEST MONEY: You'll need to wire $[Amount] to [Title Company] within 3 business days. I'll send the wiring instructions separately — please call to verify before wiring anything.\n\n📌 DUE DILIGENCE WINDOW: We have until [Date] to complete inspections and submit any repair requests. I'm reaching out to schedule your inspector today.\n\n📌 NEXT STEPS: Your lender will be in touch to move forward with the appraisal and full underwriting.\n\nYou're doing great. I'll be in touch every step of the way.\n\nKelsie`},
-  {id:'t3',cat:'buyer',name:'Seller Disclosure Deadline',subject:'Seller disclosures — please review by [Date]',body:`Hi [Client Name],\n\nThe seller has provided their Seller Property Condition Disclosure (SPCD). Please take some time to read through this carefully — it outlines any known material defects or issues with the property.\n\n[LINK TO DISCLOSURE]\n\nIf anything looks concerning or unclear, reach out before [Deadline Date] so we can address it within your due diligence window.\n\nKelsie`},
-  {id:'t4',cat:'buyer',name:'Know Before You Buy / Due Diligence Checklist',subject:'Your due diligence window is open — here\'s your checklist',body:`[Client Name],\n\nYour due diligence window runs from today through [Date]. Here's what I recommend completing:\n\n✅ General Home Inspection (book immediately!)\n✅ Radon Test (Utah County tip: always worth it)\n✅ Sewer Scope (especially important for older homes)\n✅ Review Seller Disclosures\n✅ Apply for homeowner's insurance (get 3 quotes)\n\nOnce your inspector sends the report, we'll talk through the findings and decide if any repair requests make sense.\n\nDon't wait on the inspector — the good ones book up fast.\n\nKelsie`},
-  {id:'t5',cat:'buyer',name:'One Last Thing Before Keys / Utilities',subject:'One thing to do before your keys — utilities',body:`[Client Name],\n\nBefore closing day, please get your utilities set up so you have power, gas, and water when you walk in.\n\n⚡ Electric: Rocky Mountain Power — rmpco.com or 888-221-7070\n🔥 Gas: Enbridge Gas — enbridgegas.com/utah\n💧 Water/Sewer: Contact [City] directly\n🌐 Internet: Xfinity, Google Fiber, or CenturyLink\n\nSet these up at least 3–5 business days before your closing date.\n\nAlmost there!\n\nKelsie`},
-  {id:'t6',cat:'buyer',name:'Settlement Day What to Expect',subject:'Closing day — here\'s everything you need to know',body:`[Client Name],\n\nClosing day is [Date]! Here's what to expect:\n\n🕐 TIME: [Time] at [Title Company, Address]\n📋 WHAT TO BRING: Government-issued photo ID, wire confirmation\n⏱ DURATION: Plan for 1–2 hours\n\n⚠️ WIRE FRAUD REMINDER: Title companies will NEVER change wire instructions by email at the last minute. If you get a message asking you to wire to a new account, call me and the title company immediately before doing anything.\n\nSee you at the finish line! 🎉\n\nKelsie`},
-  {id:'t7',cat:'buyer',name:'Before You Unpack / Enroll Kids in School',subject:'Before you unpack — a few things to take care of',body:`[Client Name],\n\nCongratulations on your new home! Before you get fully settled, here are a few things to handle:\n\n🏫 SCHOOL ENROLLMENT: [Alpine / Provo City / Nebo] School District enrollment info: [Link]\n📬 USPS Mail Forward: usps.com/move\n🪪 Driver's License: Utah law requires updating within 10 days of moving\n🏦 Bank / Employer / Subscriptions: Don't forget to update your address everywhere\n\nSo excited for you both!\n\nKelsie`},
-  {id:'t8',cat:'buyer',name:'Pack This Box First / Packing Guidance',subject:'Moving tip — pack this box first (trust me)',body:`[Client Name],\n\nI've helped a lot of people move, and there's one thing I always tell everyone: pack an "Open First" box.\n\nIn it: toilet paper, hand soap, phone charger, a snack, coffee setup, a change of clothes, your kids' must-haves, and anything else you'd be miserable without on night one.\n\nYou will be exhausted. Your house will be full of boxes. Make it easy on yourself.\n\nOther packing tips:\n• Label boxes with room AND contents (not just "kitchen")\n• Pack by room — unpack by room\n• Take photos of electronics setups before you unpack them\n\nAlmost time! So excited for you.\n\nKelsie`},
-  {id:'t9',cat:'buyer',name:'Address Change Checklist',subject:'Don\'t forget — update your address everywhere',body:`[Client Name],\n\nNow that you've closed, here's your address change checklist:\n\n📬 USPS Forward: usps.com/move\n🪪 Driver's License: utah.gov/dmv (within 10 days)\n🏦 Banks & credit cards\n📱 Cell phone account\n💼 Employer / HR\n🏥 Doctor, dentist, insurance\n📦 Amazon, subscriptions\n🗳 Voter registration: vote.utah.gov\n\nWelcome home!\n\nKelsie`},
-  {id:'t10',cat:'seller',name:'Action Items / Payoff / HOA / Spare Key',subject:'Action items before we go live',body:`[Client Name],\n\nHere are a few things I need from you as we prepare for your listing:\n\n📋 MORTGAGE PAYOFF: Please contact your lender to request a payoff statement for [Address]. This helps me create an accurate net sheet for you.\n\n🏘 HOA: If applicable, please gather your HOA contact info, monthly dues, and any documents you have.\n\n🔑 SPARE KEY: I'll need a spare house key to place in the lockbox before go-live.\n\nReach out if any of these feel complicated — happy to walk you through it.\n\nKelsie`},
-  {id:'t11',cat:'seller',name:'MLS Input Sheet',subject:'MLS Input Sheet — please complete',body:`[Client Name],\n\nI need your help filling out a few details for your MLS listing. Please complete the attached input sheet and return it to me by [Date].\n\n[LINK TO INPUT SHEET]\n\nThis includes things like square footage, HOA info, included appliances, and other property details that buyers look for.\n\nKelsie`},
-  {id:'t12',cat:'seller',name:'Photo Day Guide',subject:'Photo day prep — how to get your best listing photos',body:`[Client Name],\n\nPhoto day is [Date]! Here's how to prepare:\n\n✅ Declutter every surface — counters, tables, nightstands\n✅ Remove personal photos and kids' artwork from walls\n✅ Hide pet food, litter boxes, crates\n✅ Make all beds, fluff all pillows\n✅ Open all blinds and curtains (every room!)\n✅ Turn on all lights including lamps\n✅ Clear driveways and front walkway\n✅ Mow and edge lawn, sweep porch\n\nThe photographer will arrive around [Time]. You don't need to be home, but the house needs to be ready.\n\nKelsie`},
-  {id:'t13',cat:'seller',name:'Under Contract Roadmap',subject:"You're under contract! Here's what happens next",body:`[Client Name],\n\nYou have an offer — and it's accepted! Here's your roadmap from here to close:\n\n1️⃣ DUE DILIGENCE WINDOW ([Dates]): The buyer will conduct inspections. You may receive a repair request — we'll navigate that together.\n\n2️⃣ APPRAISAL: The buyer's lender will order an appraisal. Leave the home show-ready — you don't need to be there.\n\n3️⃣ LOAN UNDERWRITING: Running in the background. No action needed from you.\n\n4️⃣ FINAL WALKTHROUGH: Buyer walks the home 24–48 hours before close.\n\n5️⃣ CLOSING DAY ([Date]): You'll sign at the title company. Funds transfer. Done!\n\nKim (your TC) will be reaching out to coordinate paperwork. I'm always available if you have questions.\n\nKelsie`},
-  {id:'t14',cat:'seller',name:'Address Change Checklist',subject:"Closing's coming — update your address",body:`[Client Name],\n\nWith closing right around the corner, here's your seller address change checklist:\n\n📬 USPS Mail Forward: usps.com/move\n🪪 Driver's License update\n🏦 Banks & financial accounts\n💼 Employer / payroll\n🏥 Healthcare providers\n📦 Amazon and subscriptions\n🗳 Voter registration\n\nAlso: keep utilities in your name until the day of possession — not before.\n\nKelsie`},
+  {id:'t1',cat:'buyer',name:'Buyer Questionnaire',subject:'Before we meet: a quick questionnaire',body:`Hi [Client Name],\n\nI'm so glad we're connecting! To make sure our time together is as valuable as possible, I'd love to have you fill out a short questionnaire before we meet.\n\n[LINK TO QUESTIONNAIRE]\n\nThis helps me understand your priorities, timeline, and what's most important to you in a home.\n\nLooking forward to it!\n\nKelsie\nThe Perry Group | Real Broker LLC`},
+  {id:'t2',cat:'buyer',name:'Congrats Earnest Money',subject:"We're under contract! 🎉 Here's what's next",body:`[Client Name],\n\nWe're officially under contract on [Address]! This is such an exciting milestone.\n\nA few things to take care of right away:\n\n📌 EARNEST MONEY: You'll need to wire $[Amount] to [Title Company] within 3 business days. I'll send the wiring instructions separately , please call to verify before wiring anything.\n\n📌 DUE DILIGENCE WINDOW: We have until [Date] to complete inspections and submit any repair requests. I'm reaching out to schedule your inspector today.\n\n📌 NEXT STEPS: Your lender will be in touch to move forward with the appraisal and full underwriting.\n\nYou're doing great. I'll be in touch every step of the way.\n\nKelsie`},
+  {id:'t3',cat:'buyer',name:'Seller Disclosure Deadline',subject:'Seller disclosures , please review by [Date]',body:`Hi [Client Name],\n\nThe seller has provided their Seller Property Condition Disclosure (SPCD). Please take some time to read through this carefully , it outlines any known material defects or issues with the property.\n\n[LINK TO DISCLOSURE]\n\nIf anything looks concerning or unclear, reach out before [Deadline Date] so we can address it within your due diligence window.\n\nKelsie`},
+  {id:'t4',cat:'buyer',name:'Know Before You Buy / Due Diligence Checklist',subject:'Your due diligence window is open , here\'s your checklist',body:`[Client Name],\n\nYour due diligence window runs from today through [Date]. Here's what I recommend completing:\n\n✅ General Home Inspection (book immediately!)\n✅ Radon Test (Utah County tip: always worth it)\n✅ Sewer Scope (especially important for older homes)\n✅ Review Seller Disclosures\n✅ Apply for homeowner's insurance (get 3 quotes)\n\nOnce your inspector sends the report, we'll talk through the findings and decide if any repair requests make sense.\n\nDon't wait on the inspector , the good ones book up fast.\n\nKelsie`},
+  {id:'t5',cat:'buyer',name:'One Last Thing Before Keys / Utilities',subject:'One thing to do before your keys , utilities',body:`[Client Name],\n\nBefore closing day, please get your utilities set up so you have power, gas, and water when you walk in.\n\n⚡ Electric: Rocky Mountain Power , rmpco.com or 888-221-7070\n🔥 Gas: Enbridge Gas , enbridgegas.com/utah\n💧 Water/Sewer: Contact [City] directly\n🌐 Internet: Xfinity, Google Fiber, or CenturyLink\n\nSet these up at least 3-5 business days before your closing date.\n\nAlmost there!\n\nKelsie`},
+  {id:'t6',cat:'buyer',name:'Settlement Day What to Expect',subject:'Closing day: here\'s everything you need to know',body:`[Client Name],\n\nClosing day is [Date]! Here's what to expect:\n\n🕐 TIME: [Time] at [Title Company, Address]\n📋 WHAT TO BRING: Government-issued photo ID, wire confirmation\n⏱ DURATION: Plan for 1-2 hours\n\n⚠️ WIRE FRAUD REMINDER: Title companies will NEVER change wire instructions by email at the last minute. If you get a message asking you to wire to a new account, call me and the title company immediately before doing anything.\n\nSee you at the finish line! 🎉\n\nKelsie`},
+  {id:'t7',cat:'buyer',name:'Before You Unpack / Enroll Kids in School',subject:'Before you unpack , a few things to take care of',body:`[Client Name],\n\nCongratulations on your new home! Before you get fully settled, here are a few things to handle:\n\n🏫 SCHOOL ENROLLMENT: [Alpine / Provo City / Nebo] School District enrollment info: [Link]\n📬 USPS Mail Forward: usps.com/move\n🪪 Driver's License: Utah law requires updating within 10 days of moving\n🏦 Bank / Employer / Subscriptions: Don't forget to update your address everywhere\n\nSo excited for you both!\n\nKelsie`},
+  {id:'t8',cat:'buyer',name:'Pack This Box First / Packing Guidance',subject:'Moving tip: pack this box first (trust me)',body:`[Client Name],\n\nI've helped a lot of people move, and there's one thing I always tell everyone: pack an "Open First" box.\n\nIn it: toilet paper, hand soap, phone charger, a snack, coffee setup, a change of clothes, your kids' must-haves, and anything else you'd be miserable without on night one.\n\nYou will be exhausted. Your house will be full of boxes. Make it easy on yourself.\n\nOther packing tips:\n• Label boxes with room AND contents (not just "kitchen")\n• Pack by room , unpack by room\n• Take photos of electronics setups before you unpack them\n\nAlmost time! So excited for you.\n\nKelsie`},
+  {id:'t9',cat:'buyer',name:'Address Change Checklist',subject:'Don\'t forget: update your address everywhere',body:`[Client Name],\n\nNow that you've closed, here's your address change checklist:\n\n📬 USPS Forward: usps.com/move\n🪪 Driver's License: utah.gov/dmv (within 10 days)\n🏦 Banks & credit cards\n📱 Cell phone account\n💼 Employer / HR\n🏥 Doctor, dentist, insurance\n📦 Amazon, subscriptions\n🗳 Voter registration: vote.utah.gov\n\nWelcome home!\n\nKelsie`},
+  {id:'t10',cat:'seller',name:'Action Items / Payoff / HOA / Spare Key',subject:'Action items before we go live',body:`[Client Name],\n\nHere are a few things I need from you as we prepare for your listing:\n\n📋 MORTGAGE PAYOFF: Please contact your lender to request a payoff statement for [Address]. This helps me create an accurate net sheet for you.\n\n🏘 HOA: If applicable, please gather your HOA contact info, monthly dues, and any documents you have.\n\n🔑 SPARE KEY: I'll need a spare house key to place in the lockbox before go-live.\n\nReach out if any of these feel complicated , happy to walk you through it.\n\nKelsie`},
+  {id:'t11',cat:'seller',name:'MLS Input Sheet',subject:'MLS Input Sheet , please complete',body:`[Client Name],\n\nI need your help filling out a few details for your MLS listing. Please complete the attached input sheet and return it to me by [Date].\n\n[LINK TO INPUT SHEET]\n\nThis includes things like square footage, HOA info, included appliances, and other property details that buyers look for.\n\nKelsie`},
+  {id:'t12',cat:'seller',name:'Photo Day Guide',subject:'Photo day prep , how to get your best listing photos',body:`[Client Name],\n\nPhoto day is [Date]! Here's how to prepare:\n\n✅ Declutter every surface , counters, tables, nightstands\n✅ Remove personal photos and kids' artwork from walls\n✅ Hide pet food, litter boxes, crates\n✅ Make all beds, fluff all pillows\n✅ Open all blinds and curtains (every room!)\n✅ Turn on all lights including lamps\n✅ Clear driveways and front walkway\n✅ Mow and edge lawn, sweep porch\n\nThe photographer will arrive around [Time]. You don't need to be home, but the house needs to be ready.\n\nKelsie`},
+  {id:'t13',cat:'seller',name:'Under Contract Roadmap',subject:"You're under contract! Here's what happens next",body:`[Client Name],\n\nYou have an offer , and it's accepted! Here's your roadmap from here to close:\n\n1️⃣ DUE DILIGENCE WINDOW ([Dates]): The buyer will conduct inspections. You may receive a repair request , we'll navigate that together.\n\n2️⃣ APPRAISAL: The buyer's lender will order an appraisal. Leave the home show-ready , you don't need to be there.\n\n3️⃣ LOAN UNDERWRITING: Running in the background. No action needed from you.\n\n4️⃣ FINAL WALKTHROUGH: Buyer walks the home 24-48 hours before close.\n\n5️⃣ CLOSING DAY ([Date]): You'll sign at the title company. Funds transfer. Done!\n\nKim (your TC) will be reaching out to coordinate paperwork. I'm always available if you have questions.\n\nKelsie`},
+  {id:'t14',cat:'seller',name:'Address Change Checklist',subject:"Closing's coming , update your address",body:`[Client Name],\n\nWith closing right around the corner, here's your seller address change checklist:\n\n📬 USPS Mail Forward: usps.com/move\n🪪 Driver's License update\n🏦 Banks & financial accounts\n💼 Employer / payroll\n🏥 Healthcare providers\n📦 Amazon and subscriptions\n🗳 Voter registration\n\nAlso: keep utilities in your name until the day of possession , not before.\n\nKelsie`},
   {id:'t15',cat:'seller',name:'Seller Closing Disclosures',subject:'Your closing disclosures are ready for review',body:`[Client Name],\n\nYour Seller Closing Disclosures have been prepared and are ready for your review. Please take a moment to look through these carefully before closing day.\n\n[LINK TO DISCLOSURES]\n\nIf anything looks off or you have questions, reach out before [Date].\n\nKim will also be following up separately to confirm your signing time.\n\nKelsie`},
-  {id:'t16',cat:'general',name:'Review Request',subject:'Can I ask you a quick favor?',body:`Hi [Client Name],\n\nThank you for trusting me with such a big moment. Working with you was genuinely one of my favorites.\n\nIf you have 2 minutes, I'd love it if you'd leave me a review. It truly helps me reach more people who need someone in their corner the way you did.\n\n⭐ Google Review: [Link]\n⭐ Zillow Review: [Link]\n\nAnd of course — if anyone you know is thinking about buying or selling, please send them my way. That's the best thank you there is.\n\nWith gratitude,\nKelsie`},
-  {id:'t17',cat:'general',name:'Just Sold',subject:'Just Sold — [Address]',body:`[Client Name],\n\nOfficial! [Address] is SOLD. 🎉\n\nIt was such a pleasure working with you through this process. I hope you feel as good about how it went as I do.\n\nA few reminders now that you're closed:\n[RELEVANT POST-CLOSING CHECKLIST]\n\nDon't hesitate to reach out for anything — questions about your new home, referrals for contractors, or just a check-in. I'm always here.\n\nCongratulations!\n\nKelsie\nThe Perry Group | Real Broker LLC\n(801) xxx-xxxx`},
-  {id:'t18',cat:'general',name:'Anniversary Check In',subject:'One year in your home — happy anniversary!',body:`Hi [Client Name],\n\nIt's been one year since you closed on [Address]. I still remember that day!\n\nI wanted to check in and see how you're loving it. Have you made any upgrades? Any projects you're proud of?\n\nAlso — if you've ever wondered what your home is worth now, I'm happy to pull together a quick market update for you. No pressure, just good info to have.\n\nHope this year in your home has been everything you hoped for.\n\nWarmly,\nKelsie`}
+  {id:'t16',cat:'general',name:'Review Request',subject:'Can I ask you a quick favor?',body:`Hi [Client Name],\n\nThank you for trusting me with such a big moment. Working with you was genuinely one of my favorites.\n\nIf you have 2 minutes, I'd love it if you'd leave me a review. It truly helps me reach more people who need someone in their corner the way you did.\n\n⭐ Google Review: [Link]\n⭐ Zillow Review: [Link]\n\nAnd of course , if anyone you know is thinking about buying or selling, please send them my way. That's the best thank you there is.\n\nWith gratitude,\nKelsie`},
+  {id:'t17',cat:'general',name:'Just Sold',subject:'Just Sold , [Address]',body:`[Client Name],\n\nOfficial! [Address] is SOLD. 🎉\n\nIt was such a pleasure working with you through this process. I hope you feel as good about how it went as I do.\n\nA few reminders now that you're closed:\n[RELEVANT POST-CLOSING CHECKLIST]\n\nDon't hesitate to reach out for anything , questions about your new home, referrals for contractors, or just a check-in. I'm always here.\n\nCongratulations!\n\nKelsie\nThe Perry Group | Real Broker LLC\n(801) xxx-xxxx`},
+  {id:'t18',cat:'general',name:'Anniversary Check In',subject:'One year in your home , happy anniversary!',body:`Hi [Client Name],\n\nIt's been one year since you closed on [Address]. I still remember that day!\n\nI wanted to check in and see how you're loving it. Have you made any upgrades? Any projects you're proud of?\n\nAlso , if you've ever wondered what your home is worth now, I'm happy to pull together a quick market update for you. No pressure, just good info to have.\n\nHope this year in your home has been everything you hoped for.\n\nWarmly,\nKelsie`}
 ];
 
 /* ══════════════════════════════════════════════
@@ -2876,7 +2885,16 @@ body.editing .iet-img-wrap:hover .iet-img-controls{opacity:1}
 /* Styled links in portal content */
 [data-editable] a{color:var(--dark-mid);text-decoration:underline;text-underline-offset:3px}
 [data-editable] a:hover{color:var(--dark)}
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 
 <!-- Toolbar DOM -->
 <div id="iet">
@@ -3386,7 +3404,16 @@ document.addEventListener('keydown', e => {
 .ntr-client{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:2px}
 .ntr-task{font-size:13px;color:var(--text);margin-bottom:3px}
 .ntr-meta{display:flex;gap:6px;align-items:center}
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 
 <!-- Assignee dropdown (shared, moved by JS) -->
 <div class="assignee-drop" id="assignee-drop"></div>
@@ -4185,7 +4212,16 @@ setTimeout(updateNotifBadge, 500);
   color:var(--dark);margin-bottom:10px;
 }
 .editable-section p{font-size:14px;color:var(--soft);line-height:1.8}
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 
 <script>
 /* ══════════════════════════════════════════════
@@ -5314,7 +5350,16 @@ window.setMasterType = function(type, rerender) {
   transition:all .15s;
 }
 .ltfu-col-del-btn:hover{color:#8b3a2a;background:#fde8e0}
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 
 <script>
 /* ══════════════════════════════════════════════
@@ -5755,7 +5800,16 @@ window.dropLTFU = window.dropLTFUStage;
 /* Source field in modal */
 .source-other-wrap{display:none;margin-top:8px}
 .source-other-wrap.visible{display:block}
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 
 
 <script>
@@ -6577,7 +6631,16 @@ window.addEventListener('load', () => window.scrollTo(0, 0));
   #sidebar-nav { transform: translateX(-230px); }
   #agent-content-area { margin-left: 0 !important; }
 }
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 
 <script>
 /* ══════════════════════════════════════════════
@@ -6886,7 +6949,16 @@ window.buildPortalWrap = function(c) {
 .ltfu-sort-toggle input[type=checkbox]{
   accent-color:var(--sage);width:15px;height:15px;cursor:pointer;
 }
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 
 <!-- Color picker popover -->
 <div class="ltfu-color-pop" id="ltfu-color-pop">
@@ -7639,7 +7711,16 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
   font-size:10px;font-weight:800;padding:3px 8px;
   border-radius:10px;letter-spacing:.5px;text-transform:uppercase;
 }
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 <style>
 /* ══ TABBED CLIENT PORTAL ══ */
 .portal-panel { display: none !important; }
@@ -7855,7 +7936,16 @@ border-top:2px solid var(--linen);margin-top:20px;padding-top:20px}
 .btn-outline-sage:hover { background: rgba(153,161,137,.12); }
 #cd-tasks-card .tasks-wrap { max-width: none; margin: 0; padding: 0; background: none; border: none; box-shadow: none; }
 @media (max-width: 760px) { .cd-new-layout { grid-template-columns: 1fr; padding: 12px; } }
-</style>
+
+  /* italic-accent-fix: 2026-07-03 */
+  /* Italic display accents use Times New Roman. Playfair Display italic capitals (Q, J, Z) render poorly. */
+  h1 em, h2 em, h3 em, h4 em, h5 em, h6 em,
+  .section-title em, .nextband h2 em, .w-hero h2 em, .offramp h2,
+  .pull, .letter-quote, .kelsie-note-text, .opt__no {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-style: italic;
+  }
+  </style>
 
 <script>
 /* ══════════════════════════════════════════════
