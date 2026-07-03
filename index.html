@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
 <title>Threshold — The Perry Group</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -119,7 +120,8 @@ hr{border:none;border-top:1px solid var(--linen);margin:18px 0}
 
 /* PIPELINE */
 .pipeline-scroll{overflow-x:auto;padding-bottom:16px}
-.pipeline-board{display:grid;grid-template-columns:repeat(6,minmax(200px,1fr));gap:12px;min-width:1000px}
+.pipeline-board{display:grid;grid-template-columns:repeat(6,minmax(200px,1fr));gap:12px}
+@media (min-width:900px){.pipeline-board{min-width:1000px}}
 .pcol{background:var(--linen);border-radius:8px;padding:12px}
 .pcol.ltfu-col{background:var(--ltfu-light);border:1px solid rgba(107,90,138,.15)}
 .pcol-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
@@ -8804,9 +8806,9 @@ function rmDetailContent(cid, num) {
         '<p>Your title company will send a title report showing the plat map, ownership on record, and any liens or easements. Review carefully along with any HOA documents.</p>' +
         '<h4>Other Things Worth Researching</h4>' +
         '<ul>' +
-          '<li><a href="https://www.utah.gov/government/localgovt.html" target="_blank" rel="noopener" style="color:var(--sage)">City Planning / Zoning</a></li>' +
+          '<li><a href="https://www.utah.gov/" target="_blank" rel="noopener" style="color:var(--sage)">City Planning / Zoning</a></li>' +
           '<li><a href="https://www.crimemapping.com" target="_blank" rel="noopener" style="color:var(--sage)">Crime &amp; Safety Maps</a></li>' +
-          '<li><a href="https://sor.utah.gov" target="_blank" rel="noopener" style="color:var(--sage)">Sex Offender Registry</a></li>' +
+          '<li><a href="https://www.nsopw.gov/" target="_blank" rel="noopener" style="color:var(--sage)">Sex Offender Registry</a></li>' +
           '<li><a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener" style="color:var(--sage)">FEMA Flood Maps</a></li>' +
           '<li><a href="https://www.utahcounty.gov/dept/assessor/" target="_blank" rel="noopener" style="color:var(--sage)">Property Tax History</a></li>' +
           '<li><a href="https://www.niche.com/k-12/search/best-school-districts/s/utah/" target="_blank" rel="noopener" style="color:var(--sage)">School District Ratings</a></li>' +
